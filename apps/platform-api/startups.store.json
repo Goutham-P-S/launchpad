@@ -1,0 +1,65 @@
+[
+  {
+    "startupId": 1,
+    "slug": "e-commerce-for-hand-crafted-go",
+    "ports": {
+      "webPort": 3001,
+      "dbPort": 5433,
+      "n8nPort": 5679,
+      "backendPort": 4001
+    },
+    "sandboxName": "startup-0001-e-commerce-for-hand-crafted-go",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0001-e-commerce-for-hand-crafted-go\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-22T05:15:00.959Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "18844f48-c145-40ac-9faf-943fcc68aef4"
+  },
+  {
+    "startupId": 2,
+    "slug": "an-elegant-furniture-selling-p",
+    "ports": {
+      "webPort": 3002,
+      "dbPort": 5434,
+      "n8nPort": 5680,
+      "backendPort": 4002
+    },
+    "sandboxName": "startup-0002-an-elegant-furniture-selling-p",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0002-an-elegant-furniture-selling-p\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-22T12:02:30.304Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "b7cb3bcd-4edc-4c3f-bdb3-b023765bf328"
+  },
+  {
+    "startupId": 3,
+    "slug": "create-an-elegant-jewelry-sell",
+    "ports": {
+      "webPort": 3003,
+      "dbPort": 5435,
+      "n8nPort": 5681,
+      "backendPort": 4003
+    },
+    "sandboxName": "startup-0003-create-an-elegant-jewelry-sell",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0003-create-an-elegant-jewelry-sell\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-22T12:55:16.239Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "0754135e-5ceb-4dfa-b525-941ec4782d52"
+  }
+]
