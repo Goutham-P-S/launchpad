@@ -123,26 +123,6 @@ export async function runWebDevAgent(params: {
 
   console.log("✅ Full stack generated successfully");
 
-  // //
-  // // 7️⃣ Generate Prisma Client
-  // //
-  // await runCommand(
-  //   params.jobId,
-  //   "npx",
-  //   ["prisma", "generate"],
-  //   backendPath
-  // );
-
-  // //
-  // // 8️⃣ Run Migration
-  // //
-  // await runCommand(
-  //   params.jobId,
-  //   "npx",
-  //   ["prisma", "migrate", "deploy"],
-  //   backendPath
-  // );
-
-
+  return plan;
 }
 

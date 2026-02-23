@@ -8,10 +8,11 @@ const builder: WorkflowBuilder = {
     // 🔐 Validate IR
     const parsed = IRv1Schema.parse(ir) as IRv1;
 
-    // v1 builder ignores flexibility and builds fixed template
+    // v1 builder now uses flexibility of IR
     return buildStartupWorkflowTemplate({
       startupId,
       sandboxName,
+      ir: parsed,
     });
   },
 };

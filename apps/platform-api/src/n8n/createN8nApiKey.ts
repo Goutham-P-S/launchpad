@@ -31,8 +31,8 @@ export async function createN8nApiKey(params: {
   // 5️⃣ Click Save
   await page.getByRole("button", { name: /^save$/i }).click();
 
- // ⏳ Wait for modal content
- const apiKeyLocator = page.locator(
+  // ⏳ Wait for modal content
+  const apiKeyLocator = page.locator(
     '[data-test-id="copy-input"] > span'
   );
 

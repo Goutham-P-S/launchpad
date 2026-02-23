@@ -56,7 +56,7 @@ export async function runOrchestration(
     streamLog(jobId, "Generating backend and frontend...");
     ensureNotCancelled(jobId);
 
-    await runWebDevAgent({
+    const backendPlan = await runWebDevAgent({
       startupId: startup.startupId,
       sandboxPath: startup.sandboxPath,
       requirement: prompt,
@@ -164,7 +164,8 @@ export async function runOrchestration(
       requirement: prompt,
       context: {
         startupId: startup.startupId,
-        sandboxName: startup.sandboxName
+        sandboxName: startup.sandboxName,
+        backendPlan
       }
     });
 

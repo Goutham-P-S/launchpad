@@ -1,0 +1,52 @@
+{
+  "kind": "workflow",
+  "version": "v1",
+  "workflows": [
+    {
+      "name": "Feedback Analyzer",
+      "trigger": {
+        "type": "cron",
+        "everyMinutes": 1
+      },
+      "source": {
+        "type": "http",
+        "path": "/api/feedback"
+      },
+      "processing": {
+        "type": "llm-analysis",
+        "model": "llama3.1",
+        "instruction": "Analyze data..."
+      },
+      "sink": {
+        "type": "platform-api",
+        "path": "/startups/startup-9999-test/suggestions"
+      }
+    },
+    {
+      "name": "New Order Email",
+      "trigger": {
+        "type": "webhook",
+        "path": "/webhook/order"
+      },
+      "source": null,
+      "sink": {
+        "type": "email",
+        "subjectTemplate": "{{orderID}}: Your order has been received!",
+        "bodyTemplate": "Dear {{customerName}},<br><br>Your fresh grocery delivery order ({{orderID}}) has been successfully placed.<br>Thank you for choosing us!"
+      }
+    },
+    {
+      "name": "New Signup Email",
+      "trigger": {
+        "type": "webhook",
+        "path": "/webhook/signup"
+      },
+      "source": null,
+      "sink": {
+        "type": "email",
+        "subjectTemplate": "Welcome to Fresh Groceries!",
+        "bodyTemplate": "Dear {{customerName}},<br><br>Welcome to our fresh grocery delivery service!<br>We're excited to have you on board and look forward to serving your needs.<br>Thank you for signing up!"
+      }
+    }
+  ]
+}

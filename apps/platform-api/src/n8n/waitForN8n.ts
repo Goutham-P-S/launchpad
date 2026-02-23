@@ -18,7 +18,7 @@ export async function waitForN8nReady(params: {
       });
 
       if (res.status === 200) return true;
-    } catch {}
+    } catch { }
 
     await new Promise((r) => setTimeout(r, 2000));
   }

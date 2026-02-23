@@ -1,154 +1,166 @@
-﻿export function buildStartupWorkflowTemplate(params: {
+﻿import { IRv1 } from "./ir/v1.types";
+
+export function buildStartupWorkflowTemplate(params: {
   startupId: number;
   sandboxName: string;
+  ir: IRv1;
   startupWebInternalUrl?: string; // default http://web:3000
 }) {
   const {
     startupId,
     sandboxName,
+    ir,
     startupWebInternalUrl = "http://web:3000",
   } = params;
 
-  return {
-    name: `Startup-${startupId} Feedback Analyzer`,
-    active: true,
+  const nodes: any[] = [];
+  const connections: any = {};
 
-    nodes: [
-      {
-        id: "cron_trigger",
-        name: "Every 1 minute",
-        type: "n8n-nodes-base.cron",
-        typeVersion: 1,
-        position: [250, 250],
-        parameters: {
-          rule: { interval: [{ field: "minutes", minutesInterval: 1 }] },
-        },
+  ir.flows.forEach((flow, index) => {
+    const flowId = flow.name.replace(/\s+/g, "_").toLowerCase();
+
+    // 1. Trigger
+    const triggerNode = {
+      id: `${flowId}_trigger`,
+      name: `${flow.name} Trigger`,
+      type: "n8n-nodes-base.cron",
+      typeVersion: 1,
+      position: [250, index * 250 + 250],
+      parameters: {
+        rule: { interval: [{ field: "minutes", minutesInterval: flow.trigger.everyMinutes }] },
       },
+    };
 
-      {
-        id: "get_feedback",
-        name: "Fetch feedback",
-        type: "n8n-nodes-base.httpRequest",
-        typeVersion: 4,
-        position: [520, 250],
-        parameters: {
-          url: `${startupWebInternalUrl}/api/feedback`,
-          method: "GET",
-          responseFormat: "json",
-        },
+    // 2. HTTP Source
+    const sourceNode = {
+      id: `${flowId}_source`,
+      name: `Fetch ${flow.name} Data`,
+      type: "n8n-nodes-base.httpRequest",
+      typeVersion: 4,
+      position: [500, index * 250 + 250],
+      parameters: {
+        url: `${startupWebInternalUrl}${flow.source.path}`,
+        method: "GET",
+        responseFormat: "json",
       },
+    };
 
-      // ✅ FIXED BUILD PROMPT NODE
-      {
-  id: "build_prompt",
-  name: "Build prompt",
-  type: "n8n-nodes-base.code",
-  typeVersion: 2, // 👈 IMPORTANT (use v2)
-  position: [780, 250],
-  parameters: {
-    jsCode: `
+    // 3. Logic Node
+    let logicNode: any;
+    let sinkNode: any;
+
+    if (flow.action.type === "llm-analysis") {
+      logicNode = {
+        id: `${flowId}_logic`,
+        name: `Analyze ${flow.name}`,
+        type: "n8n-nodes-base.code",
+        typeVersion: 2,
+        position: [750, index * 250 + 250],
+        parameters: {
+          jsCode: `
 const items = $input.all();
-
 if (!items.length) {
-  return [{
-    json: {
-      sandboxName: "${sandboxName}",
-      startupId: ${startupId},
-      prompt: "No feedback available"
-    }
-  }];
+  return [{ json: { sandboxName: "${sandboxName}", startupId: ${startupId}, prompt: "No data" } }];
 }
+const data = items.map(i => JSON.stringify(i.json)).join("\\n");
+return [{
+  json: {
+    sandboxName: "${sandboxName}",
+    startupId: ${startupId},
+    prompt: "${flow.action.instruction.replace(/"/g, '\\"')}\\n\\nData:\\n" + data
+  }
+}];`.trim(),
+        },
+      };
 
-return items.map(item => {
-  const data = item.json ?? {};
-
-  let feedback = [];
-  if (Array.isArray(data.feedback)) feedback = data.feedback;
-  else if (Array.isArray(data.data)) feedback = data.data;
-
-  const top = feedback
-    .slice(0, 30)
-    .map(f => {
-      if (typeof f === "string") return "- " + f;
-      if (f?.message) return "- " + f.message;
-      return "- " + JSON.stringify(f);
-    })
-    .join("\\n");
-
-  return {
-    json: {
-      sandboxName: "${sandboxName}",
-      startupId: ${startupId},
-      prompt:
-        "You are a product analyst. Read the feedback and return ONLY JSON with keys: summary, topProblems[], topFeatureRequests[], quickWins[].\\n\\nFeedback:\\n" +
-        (top || "No feedback found")
-    }
-  };
-});
-    `.trim(),
-  },
-}
-,
-
-{
-  id: "ollama_analyze",
-  name: "Ollama analyze",
-  type: "n8n-nodes-base.httpRequest",
-  typeVersion: 4,
-  position: [1040, 250],
-  parameters: {
-    url: "={{ $env.OLLAMA_URL }}",
-    method: "POST",
-    responseFormat: "json",
-
-    sendBody: true,
-    specifyBody: "json",
-
-    jsonBody: "={{ { \
-  model: 'llama3.1', \
-  prompt: $json.prompt || 'No prompt provided', \
-  stream: false \
-} }}",
-  },
-}
-
-,
-
-      {
-        id: "send_platform",
-        name: "Send to platform",
+      const ollamaNode = {
+        id: `${flowId}_ollama`,
+        name: `Ollama ${flow.name}`,
         type: "n8n-nodes-base.httpRequest",
         typeVersion: 4,
-        position: [1300, 250],
+        position: [1000, index * 250 + 250],
         parameters: {
-          url: "http://backend:4000/api/suggestions",
+          url: "={{ $env.OLLAMA_URL }}",
           method: "POST",
-          responseFormat: "json",
-          sendBody:true,
-          specifyBody:"json",
-          jsonBody:`={"startupId":{{$("Build prompt").item.json.startupId}},
-  "sandboxName":{{$("Build prompt").item.json.sandboxName.toJsonString()}},
-  "analysis": {{$json.response.replaceSpecialChars().replaceAll("\`\`\`","").toJsonString()}}
-        }`,
+          sendBody: true,
+          specifyBody: "json",
+          jsonBody: "={{ { model: 'llama3.1', prompt: $json.prompt, stream: false } }}",
         },
-      },
-    ],
+      };
 
-    connections: {
-      "Every 1 minute": {
-        main: [[{ node: "Fetch feedback", type: "main", index: 0 }]],
-      },
-      "Fetch feedback": {
-        main: [[{ node: "Build prompt", type: "main", index: 0 }]],
-      },
-      "Build prompt": {
-        main: [[{ node: "Ollama analyze", type: "main", index: 0 }]],
-      },
-      "Ollama analyze": {
-        main: [[{ node: "Send to platform", type: "main", index: 0 }]],
-      },
-    },
+      sinkNode = {
+        id: `${flowId}_sink`,
+        name: `Submit Suggestion`,
+        type: "n8n-nodes-base.httpRequest",
+        typeVersion: 4,
+        position: [1250, index * 250 + 250],
+        parameters: {
+          url: `http://host.docker.internal:5050${flow.sink.path}`,
+          method: "POST",
+          sendBody: true,
+          specifyBody: "json",
+          jsonBody: `={
+            "startupId": ${startupId},
+            "sandboxName": "${sandboxName}",
+            "analysis": {{$json.response.replaceSpecialChars().toJsonString()}}
+          }`,
+        },
+      };
 
+      nodes.push(triggerNode, sourceNode, logicNode, ollamaNode, sinkNode);
+      connections[triggerNode.name] = { main: [[{ node: sourceNode.name, type: "main", index: 0 }]] };
+      connections[sourceNode.name] = { main: [[{ node: logicNode.name, type: "main", index: 0 }]] };
+      connections[logicNode.name] = { main: [[{ node: ollamaNode.name, type: "main", index: 0 }]] };
+      connections[ollamaNode.name] = { main: [[{ node: sinkNode.name, type: "main", index: 0 }]] };
+
+    } else {
+      // Notification flow (e.g. Email Agent)
+      logicNode = {
+        id: `${flowId}_logic`,
+        name: `Format ${flow.name}`,
+        type: "n8n-nodes-base.code",
+        typeVersion: 2,
+        position: [750, index * 250 + 250],
+        parameters: {
+          jsCode: `
+const items = $input.all();
+return items.map(item => ({
+  json: {
+    message: "${flow.action.instruction.replace(/"/g, '\\"')}",
+    data: item.json
+  }
+}));`.trim(),
+        },
+      };
+
+      sinkNode = {
+        id: `${flowId}_sink`,
+        name: `Mock Email Agent`,
+        type: "n8n-nodes-base.code",
+        typeVersion: 2,
+        position: [1000, index * 250 + 250],
+        parameters: {
+          jsCode: `
+console.log("📧 SENDING EMAIL...");
+console.log("To: admin@${sandboxName}.com");
+console.log("Subject: ${flow.name} Notification");
+console.log("Content: " + $json.message);
+return [{ json: { status: "sent", to: "admin@${sandboxName}.com", content: $json.message } }];`.trim(),
+        },
+      };
+
+      nodes.push(triggerNode, sourceNode, logicNode, sinkNode);
+      connections[triggerNode.name] = { main: [[{ node: sourceNode.name, type: "main", index: 0 }]] };
+      connections[sourceNode.name] = { main: [[{ node: logicNode.name, type: "main", index: 0 }]] };
+      connections[logicNode.name] = { main: [[{ node: sinkNode.name, type: "main", index: 0 }]] };
+    }
+  });
+
+  return {
+    name: `Startup-${startupId} Managed Workflows`,
+    active: true,
+    nodes,
+    connections,
     settings: {},
   };
 }

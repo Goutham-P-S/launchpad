@@ -72,6 +72,6 @@ export async function setupN8nOwner(params: {
   // ✅ Wait for redirect away from /setup
   await page.waitForTimeout(5000);
 
- return { browser, page };
+  return { browser, page };
 
 }

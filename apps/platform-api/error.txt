@@ -1,0 +1,48 @@
+ZodError: [
+  {
+    "expected": "object",
+    "code": "invalid_type",
+    "path": [
+      "workflows",
+      1,
+      "source"
+    ],
+    "message": "Invalid input: expected object, received null"
+  },
+  {
+    "expected": "object",
+    "code": "invalid_type",
+    "path": [
+      "workflows",
+      1,
+      "processing"
+    ],
+    "message": "Invalid input: expected object, received null"
+  },
+  {
+    "expected": "object",
+    "code": "invalid_type",
+    "path": [
+      "workflows",
+      2,
+      "source"
+    ],
+    "message": "Invalid input: expected object, received null"
+  },
+  {
+    "expected": "object",
+    "code": "invalid_type",
+    "path": [
+      "workflows",
+      2,
+      "processing"
+    ],
+    "message": "Invalid input: expected object, received null"
+  }
+]
+    at Object.build (C:\Users\goutham\Documents\Main Project\final_yr_proj\apps\platform-api\src\n8n\builder\v1\index.ts:9:31)
+    at runTest (C:\Users\goutham\Documents\Main Project\final_yr_proj\apps\platform-api\test-builder.ts:14:35)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\nRaw Error JSON:\n{
+  "name": "ZodError",
+  "message": "[\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"workflows\",\n      1,\n      \"source\"\n    ],\n    \"message\": \"Invalid input: expected object, received null\"\n  },\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"workflows\",\n      1,\n      \"processing\"\n    ],\n    \"message\": \"Invalid input: expected object, received null\"\n  },\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"workflows\",\n      2,\n      \"source\"\n    ],\n    \"message\": \"Invalid input: expected object, received null\"\n  },\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"workflows\",\n      2,\n      \"processing\"\n    ],\n    \"message\": \"Invalid input: expected object, received null\"\n  }\n]"
+}

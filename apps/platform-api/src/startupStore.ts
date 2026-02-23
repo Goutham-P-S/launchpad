@@ -16,6 +16,9 @@ export type StartupRecord = {
 
   // 🔐 Version pinning
   versions: StartupVersions;
+
+  // 💡 AI improvement suggestions
+  lastSuggestion?: any;
 };
 
 

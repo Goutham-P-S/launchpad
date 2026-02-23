@@ -78,6 +78,15 @@ app.post("/startups", (req, res) => {
   return res.json(record);
 });
 
+// AI Suggestions receiver from n8n
+app.post("/startups/:sandboxName/suggestions", (req, res) => {
+  const sandboxName = req.params.sandboxName;
+  const { analysis } = req.body;
+  console.log(`💡 AI SUGGESTION for ${sandboxName}:`, analysis);
+  updateStartup(sandboxName, { lastSuggestion: analysis });
+  res.json({ ok: true });
+});
+
 // Bring up docker compose for a startup
 app.post("/startups/:sandboxName/up", async (req, res) => {
   const sandboxName = req.params.sandboxName;

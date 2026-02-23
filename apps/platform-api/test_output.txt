@@ -1,0 +1,132 @@
+﻿≡ƒÜÇ Planning n8n IR...
+{
+  kind: 'workflow',
+  version: 'v1',
+  flows: [
+    {
+      name: 'Analyze Feedback',
+      trigger: { type: 'cron', everyMinutes: 5 },
+      source: { type: 'http', path: '/api/feedbacks' },
+      action: {
+        type: 'llm-analysis',
+        instruction: 'Generate insights from customer feedback.'
+      },
+      sink: {
+        type: 'platform-api',
+        path: '/startups/test-n8n-multi/suggestions'
+      }
+    },
+    {
+      name: 'Notify New Orders',
+      trigger: { type: 'cron', everyMinutes: 1 },
+      source: { type: 'http', path: '/api/orders' },
+      action: {
+        type: 'notification',
+        instruction: 'Send an email notification for new orders.'
+      },
+      sink: {
+        type: 'mock-email',
+        path: '/startups/test-n8n-multi/notifications'
+      }
+    },
+    {
+      name: 'Notify New Customers',
+      trigger: { type: 'cron', everyMinutes: 1 },
+      source: { type: 'http', path: '/api/customers' },
+      action: {
+        type: 'notification',
+        instruction: 'Send a welcome email to new customers.'
+      },
+      sink: {
+        type: 'mock-email',
+        path: '/startups/test-n8n-multi/notifications'
+      }
+    }
+  ]
+}
+
+≡ƒÜÇ Building n8n Workflow...
+
+Γ£à Workflow Nodes:
+- [n8n-nodes-base.cron] Analyze Feedback Trigger (ID: analyze_feedback_trigger)
+- [n8n-nodes-base.httpRequest] Fetch Analyze Feedback Data (ID: analyze_feedback_source)
+  URL: http://web:3000/api/feedbacks
+- [n8n-nodes-base.code] Analyze Analyze Feedback (ID: analyze_feedback_logic)
+- [n8n-nodes-base.httpRequest] Ollama Analyze Feedback (ID: analyze_feedback_ollama)
+  URL: ={{ $env.OLLAMA_URL }}
+- [n8n-nodes-base.httpRequest] Submit Suggestion (ID: analyze_feedback_sink)
+  URL: http://backend:4000/startups/test-n8n-multi/suggestions
+- [n8n-nodes-base.cron] Notify New Orders Trigger (ID: notify_new_orders_trigger)
+- [n8n-nodes-base.httpRequest] Fetch Notify New Orders Data (ID: notify_new_orders_source)
+  URL: http://web:3000/api/orders
+- [n8n-nodes-base.code] Format Notify New Orders (ID: notify_new_orders_logic)
+- [n8n-nodes-base.httpRequest] Mock Email Agent (ID: notify_new_orders_sink)
+  URL: http://backend:4000/api/logs
+- [n8n-nodes-base.cron] Notify New Customers Trigger (ID: notify_new_customers_trigger)
+- [n8n-nodes-base.httpRequest] Fetch Notify New Customers Data (ID: notify_new_customers_source)
+  URL: http://web:3000/api/customers
+- [n8n-nodes-base.code] Format Notify New Customers (ID: notify_new_customers_logic)
+- [n8n-nodes-base.httpRequest] Mock Email Agent (ID: notify_new_customers_sink)
+  URL: http://backend:4000/api/logs
+
+Γ£à Workflow Connections:
+{
+  'Analyze Feedback Trigger': {
+    main: [
+      [
+        { node: 'Fetch Analyze Feedback Data', type: 'main', index: 0 }
+      ]
+    ]
+  },
+  'Fetch Analyze Feedback Data': {
+    main: [
+      [ { node: 'Analyze Analyze Feedback', type: 'main', index: 0 } ]
+    ]
+  },
+  'Analyze Analyze Feedback': {
+    main: [ [ { node: 'Ollama Analyze Feedback', type: 'main', index: 0 } ] ]
+  },
+  'Ollama Analyze Feedback': {
+    main: [ [ { node: 'Submit Suggestion', type: 'main', index: 0 } ] ]
+  },
+  'Notify New Orders Trigger': {
+    main: [
+      [
+        {
+          node: 'Fetch Notify New Orders Data',
+          type: 'main',
+          index: 0
+        }
+      ]
+    ]
+  },
+  'Fetch Notify New Orders Data': {
+    main: [
+      [ { node: 'Format Notify New Orders', type: 'main', index: 0 } ]
+    ]
+  },
+  'Format Notify New Orders': {
+    main: [ [ { node: 'Mock Email Agent', type: 'main', index: 0 } ] ]
+  },
+  'Notify New Customers Trigger': {
+    main: [
+      [
+        {
+          node: 'Fetch Notify New Customers Data',
+          type: 'main',
+          index: 0
+        }
+      ]
+    ]
+  },
+  'Fetch Notify New Customers Data': {
+    main: [
+      [
+        { node: 'Format Notify New Customers', type: 'main', index: 0 }
+      ]
+    ]
+  },
+  'Format Notify New Customers': {
+    main: [ [ { node: 'Mock Email Agent', type: 'main', index: 0 } ] ]
+  }
+}
