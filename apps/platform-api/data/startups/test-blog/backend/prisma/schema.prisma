@@ -1,0 +1,64 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+  title String
+  body String
+  slug String
+  publishedDate String
+  customerId Int
+  customer Customer @relation("Customer_Post", fields: [customerId], references: [id])
+  comments Comment[] @relation("Comment_Post")
+}
+
+model Customer {
+  id Int @id @default(autoincrement())
+  username String
+  email String
+  passwordHash String
+  posts Post[] @relation("Customer_Post")
+  comments Comment[] @relation("Comment_Customer")
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  body String
+  publishedDate String
+  postId Int
+  post Post @relation("Comment_Post", fields: [postId], references: [id])
+  customerId Int
+  customer Customer @relation("Comment_Customer", fields: [customerId], references: [id])
+}
+
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  roles     UserRole[]
+  createdAt DateTime @default(now())
+}
+
+model Role {
+  id    Int        @id @default(autoincrement())
+  name  String     @unique
+  users UserRole[]
+}
+
+model UserRole {
+  userId Int
+  roleId Int
+
+  user User @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+}

@@ -21,7 +21,7 @@ export async function planBackendArchitecture(
 ) {
   console.log("🧠 Backend planning...");
 
-const system = `
+  const system = `
 You are a senior backend architect.
 
 Design business entities for a relational database.
@@ -29,8 +29,7 @@ Design business entities for a relational database.
 STRICT RULES:
 - Only output JSON.
 - Do NOT include explanations.
-- Do NOT use markdown.
-- Do NOT include backticks.
+- Do NOT use markdown outside of the JSON block if any.
 - Do NOT include id fields.
 - Do NOT include foreignKey fields.
 - Do NOT include Prisma syntax.
@@ -38,6 +37,7 @@ STRICT RULES:
 Return format:
 
 {
+  "appType": "ecommerce" | "blog" | "saas",
   "entities": [
     {
       "name": "ModelName",

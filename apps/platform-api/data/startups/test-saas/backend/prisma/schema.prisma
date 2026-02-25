@@ -1,0 +1,58 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id Int @id @default(autoincrement())
+  companyName String
+  contactEmail String
+  integrations Integration[] @relation("Customer_Integration")
+}
+
+model Integration {
+  id Int @id @default(autoincrement())
+  sourceCrm String
+  destinationCrm String
+  customerId Int
+  customer Customer @relation("Customer_Integration", fields: [customerId], references: [id])
+  datasyncs DataSync[] @relation("DataSync_Integration")
+}
+
+model DataSync {
+  id Int @id @default(autoincrement())
+  status String
+  startTime String
+  integrationId Int
+  integration Integration @relation("DataSync_Integration", fields: [integrationId], references: [id])
+}
+
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  roles     UserRole[]
+  createdAt DateTime @default(now())
+}
+
+model Role {
+  id    Int        @id @default(autoincrement())
+  name  String     @unique
+  users UserRole[]
+}
+
+model UserRole {
+  userId Int
+  roleId Int
+
+  user User @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+}

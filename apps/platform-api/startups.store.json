@@ -376,5 +376,320 @@
     },
     "status": "building",
     "jobId": "test-job-1771809258705"
+  },
+  {
+    "startupId": 19,
+    "slug": "e-commerce-for-hand-crafted-go",
+    "ports": {
+      "webPort": 3019,
+      "dbPort": 5451,
+      "n8nPort": 5697,
+      "backendPort": 4019
+    },
+    "sandboxName": "startup-0019-e-commerce-for-hand-crafted-go",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0019-e-commerce-for-hand-crafted-go\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-23T09:02:57.105Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "115a1a93-e468-4d12-a1b3-0da67ecce03c"
+  },
+  {
+    "startupId": 20,
+    "slug": "e-commerce-for-hand-crafted-go",
+    "ports": {
+      "webPort": 3020,
+      "dbPort": 5452,
+      "n8nPort": 5698,
+      "backendPort": 4020
+    },
+    "sandboxName": "startup-0020-e-commerce-for-hand-crafted-go",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0020-e-commerce-for-hand-crafted-go\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-23T13:43:54.863Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "bab9bcf1-3a9a-4eb6-bb18-42662783271e"
+  },
+  {
+    "startupId": 21,
+    "slug": "saas-analytics-dashboard",
+    "ports": {
+      "webPort": 3021,
+      "dbPort": 5453,
+      "n8nPort": 5699,
+      "backendPort": 4021
+    },
+    "sandboxName": "startup-0021-saas-analytics-dashboard",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0021-saas-analytics-dashboard\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-23T16:13:16.491Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "f844658d-712e-474b-8470-4c908e75612b"
+  },
+  {
+    "startupId": 22,
+    "slug": "freelance-marketplace-with-bid",
+    "ports": {
+      "webPort": 3022,
+      "dbPort": 5454,
+      "n8nPort": 5700,
+      "backendPort": 4022
+    },
+    "sandboxName": "startup-0022-freelance-marketplace-with-bid",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0022-freelance-marketplace-with-bid\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-23T16:15:33.634Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "246bce2f-5f4a-4bfc-82a1-4ca3000b2a3b"
+  },
+  {
+    "startupId": 23,
+    "slug": "blog-platform-with-subscriptio",
+    "ports": {
+      "webPort": 3023,
+      "dbPort": 5455,
+      "n8nPort": 5701,
+      "backendPort": 4023
+    },
+    "sandboxName": "startup-0023-blog-platform-with-subscriptio",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0023-blog-platform-with-subscriptio\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-24T05:29:46.365Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "db8c0443-a038-428a-a59d-f048485a19f0"
+  },
+  {
+    "startupId": 24,
+    "slug": "freelance-marketplace-with-bid",
+    "ports": {
+      "webPort": 3024,
+      "dbPort": 5456,
+      "n8nPort": 5702,
+      "backendPort": 4024
+    },
+    "sandboxName": "startup-0024-freelance-marketplace-with-bid",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0024-freelance-marketplace-with-bid\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-24T06:19:29.491Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "26b8d18f-23d1-428b-a8a0-357dab13b897"
+  },
+  {
+    "startupId": 25,
+    "slug": "minimalist-dev-blog",
+    "ports": {
+      "webPort": 3025,
+      "dbPort": 5457,
+      "n8nPort": 5703,
+      "backendPort": 4025
+    },
+    "sandboxName": "startup-0025-minimalist-dev-blog",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0025-minimalist-dev-blog\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-24T09:54:28.888Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "707e3973-0209-47b4-8d41-2ae11173df5b"
+  },
+  {
+    "startupId": 26,
+    "slug": "blog-platform-with-subscriptio",
+    "ports": {
+      "webPort": 3026,
+      "dbPort": 5458,
+      "n8nPort": 5704,
+      "backendPort": 4026
+    },
+    "sandboxName": "startup-0026-blog-platform-with-subscriptio",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0026-blog-platform-with-subscriptio\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-25T02:19:27.023Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "de6db2b2-8807-4184-a676-179aff208fb6"
+  },
+  {
+    "startupId": 27,
+    "slug": "saas-analytics-dashboard",
+    "ports": {
+      "webPort": 3027,
+      "dbPort": 5459,
+      "n8nPort": 5705,
+      "backendPort": 4027
+    },
+    "sandboxName": "startup-0027-saas-analytics-dashboard",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0027-saas-analytics-dashboard\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-25T02:30:03.133Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "396a4cfa-952e-46a2-b531-4f550cc8bee9"
+  },
+  {
+    "startupId": 28,
+    "slug": "saas-analytics-dashboard",
+    "ports": {
+      "webPort": 3028,
+      "dbPort": 5460,
+      "n8nPort": 5706,
+      "backendPort": 4028
+    },
+    "sandboxName": "startup-0028-saas-analytics-dashboard",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0028-saas-analytics-dashboard\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-25T02:41:11.595Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "02bf65fe-6016-4806-98da-61b4161818f1"
+  },
+  {
+    "startupId": 29,
+    "slug": "saas-analytics-dashboard",
+    "ports": {
+      "webPort": 3029,
+      "dbPort": 5461,
+      "n8nPort": 5707,
+      "backendPort": 4029
+    },
+    "sandboxName": "startup-0029-saas-analytics-dashboard",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0029-saas-analytics-dashboard\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-25T05:22:21.288Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "545c2dd8-bfb1-4d15-9479-2f2acf323e7b"
+  },
+  {
+    "startupId": 30,
+    "slug": "saas-analytics-dashboard",
+    "ports": {
+      "webPort": 3030,
+      "dbPort": 5462,
+      "n8nPort": 5708,
+      "backendPort": 4030
+    },
+    "sandboxName": "startup-0030-saas-analytics-dashboard",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0030-saas-analytics-dashboard\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-25T05:46:16.744Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "84bbced4-9299-4cdd-9692-ae1aae834280"
+  },
+  {
+    "startupId": 31,
+    "slug": "saas-analytics-dashboard",
+    "ports": {
+      "webPort": 3031,
+      "dbPort": 5463,
+      "n8nPort": 5709,
+      "backendPort": 4031
+    },
+    "sandboxName": "startup-0031-saas-analytics-dashboard",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0031-saas-analytics-dashboard\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-25T06:07:00.142Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "bb62ba91-636e-4ff5-91bc-026015df12d7"
+  },
+  {
+    "startupId": 32,
+    "slug": "saas-analytics-dashboard",
+    "ports": {
+      "webPort": 3032,
+      "dbPort": 5464,
+      "n8nPort": 5710,
+      "backendPort": 4032
+    },
+    "sandboxName": "startup-0032-saas-analytics-dashboard",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0032-saas-analytics-dashboard\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-25T06:29:23.539Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "building",
+    "jobId": "f459ea4c-e4cb-41b4-afbe-e14018dcf581"
+  },
+  {
+    "startupId": 33,
+    "slug": "saas-analytics-dashboard",
+    "ports": {
+      "webPort": 3033,
+      "dbPort": 5465,
+      "n8nPort": 5711,
+      "backendPort": 4033
+    },
+    "sandboxName": "startup-0033-saas-analytics-dashboard",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0033-saas-analytics-dashboard\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-02-25T06:42:35.851Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "7d68efbe-5150-4c25-b40d-fb125fe1bd74"
   }
 ]

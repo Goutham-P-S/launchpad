@@ -83,30 +83,7 @@ export async function runOrchestration(
 
     ensureNotCancelled(jobId);
 
-    //
-    // 🗄 Run Prisma migration inside backend container
-    //
-    const backendContainer = `startup_${String(startup.startupId).padStart(4, "0")}_backend`;
 
-    streamLog(jobId, "Running Prisma migration inside container...");
-
-    await runCommand(
-      jobId,
-      "docker",
-      [
-        "exec",
-        backendContainer,
-        "npx",
-        "prisma",
-        "db",
-        "push"
-      ],
-      startup.sandboxPath
-    );
-
-
-
-    streamLog(jobId, "Database migration completed.");
 
     ensureNotCancelled(jobId);
 

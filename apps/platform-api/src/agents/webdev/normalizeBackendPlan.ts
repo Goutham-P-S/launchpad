@@ -24,5 +24,8 @@ export function normalizeBackendPlan(plan: any) {
     return { name, fields, relations };
   });
 
-  return { entities: normalizedEntities };
+  return {
+    appType: plan.appType || "ecommerce",
+    entities: normalizedEntities
+  };
 }

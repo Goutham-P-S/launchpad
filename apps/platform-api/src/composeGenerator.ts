@@ -19,14 +19,18 @@
       PORT: 4000
       DB_HOST: db
       DB_PORT: 5432
+      CI: "true"
 
     ports:
       - \${BACKEND_PORT}:4000
 
     volumes:
       - ./backend:/app
+      - /app/node_modules
+      - /app/node_modules/.pnpm
+      - /app/node_modules/.prisma
 
-    command: sh -c "npm install && npx prisma generate && npx prisma db push && npm run dev"
+    command: sh -c "npx pnpm install && npx pnpm exec prisma generate && npx pnpm exec prisma db push && npx pnpm run dev"
 
 
 
@@ -114,11 +118,14 @@
     - DB_USER=\${POSTGRES_USER}
     - DB_PASS=\${POSTGRES_PASSWORD}
     - DB_NAME=\${POSTGRES_DB}
+    - CI=true
     - BACKEND_URL=http://backend:4000
     - VITE_API_URL=http://localhost:\${BACKEND_PORT}/api
     volumes:
       - ./web:/app
-    command: sh -c "npm install && npm run dev"
+      - /app/node_modules
+      - /app/node_modules/.pnpm
+    command: sh -c "npx pnpm install && npx pnpm run dev"
 
     depends_on:
       - db

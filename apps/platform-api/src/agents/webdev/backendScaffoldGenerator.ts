@@ -45,7 +45,7 @@ export function generateBackendScaffold(
     dependencies: {
       express: "^4.18.2",
       cors: "^2.8.5",
-      "@prisma/client": "^5.0.0",
+      "@prisma/client": "~5.22.0",
       zod: "^3.22.4",
       bcryptjs: "^2.4.3",
       jsonwebtoken: "^9.0.0"
@@ -53,7 +53,7 @@ export function generateBackendScaffold(
 
     devDependencies: {
       typescript: "^5.0.0",
-      prisma: "^5.0.0",
+      prisma: "~5.22.0",
       "ts-node": "^10.9.1",
       "ts-node-dev": "^2.0.0",
       "@types/express": "^4.17.0",

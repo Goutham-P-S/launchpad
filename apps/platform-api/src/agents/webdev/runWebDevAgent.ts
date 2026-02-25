@@ -7,8 +7,12 @@ import { generateCrudForEntity } from "./crudGenerator";
 import { generateBackendScaffold } from "./backendScaffoldGenerator";
 import { runCommand } from "../../orchestrator/runCommand";
 import { writeBackendEnv } from "../../backendEnvGenerator";
-import { generateEcommerceFrontend } from "../frontend/generateEcommerceFrontend";
 import { planEcommerceFrontend } from "../frontend/ecommerceFrontendPlanner";
+import { generateEcommerceFrontend } from "../frontend/generateEcommerceFrontend";
+import { planBlogFrontend } from "../frontend/planBlogFrontend";
+import { generateBlogFrontend } from "../frontend/generateBlogFrontend";
+import { planSaasFrontend } from "../frontend/planSaasFrontend";
+import { generateSaasFrontend } from "../frontend/generateSaasFrontend";
 
 function injectAuthModels(schema: string) {
   const authModels = `
@@ -91,8 +95,8 @@ export async function runWebDevAgent(params: {
 
   await runCommand(
     params.jobId,
-    "npm",
-    ["install"],
+    "pnpm",
+    ["install", "--prefer-offline", "--config.node-linker=hoisted"],
     backendPath
   );
 
@@ -106,20 +110,32 @@ export async function runWebDevAgent(params: {
   }
 
   //
-  // 8️⃣ Generate E-Commerce Frontend Template
+  // 8️⃣ Generate Frontend Template based on App Type
   //
-  const frontendConfig = await planEcommerceFrontend(params.requirement);
-  generateEcommerceFrontend(webPath, plan, frontendConfig);
+  if (plan.appType === "blog") {
+    console.log("📝 Generating Blog Frontend...");
+    const frontendConfig = await planBlogFrontend(params.requirement);
+    generateBlogFrontend(webPath, plan, frontendConfig);
+  } else if (plan.appType === "saas") {
+    console.log("🚀 Generating SaaS Frontend...");
+    const frontendConfig = await planSaasFrontend(params.requirement);
+    generateSaasFrontend(webPath, plan, frontendConfig);
+  } else {
+    console.log("🛒 Generating E-Commerce Frontend...");
+    const frontendConfig = await planEcommerceFrontend(params.requirement);
+    generateEcommerceFrontend(webPath, plan, frontendConfig);
+  }
 
   //
   // 9️⃣ Install frontend deps
   //
-  await runCommand(params.jobId, "npm", ["install"], webPath);
+  await runCommand(params.jobId, "pnpm", ["install", "--prefer-offline", "--config.node-linker=hoisted"], webPath);
 
   //
   // 🔟 Build frontend 
   //
-  await runCommand(params.jobId, "npm", ["run", "build"], webPath);
+  await runCommand(params.jobId, "pnpm", ["run", "build"], webPath);
+
 
   console.log("✅ Full stack generated successfully");
 
