@@ -57,6 +57,7 @@ export async function runWebDevAgent(params: {
   //
   // 1️⃣ Plan backend (already normalized inside planner)
   //
+  console.log("DEBUG: Incoming requirement is =>", params.requirement);
   const plan = await planBackendArchitecture(params.requirement);
 
   //
@@ -100,7 +101,15 @@ export async function runWebDevAgent(params: {
     backendPath
   );
 
-  console.log("🔥 AFTER INSTALL");
+  console.log("🔥 AFTER INSTALL, GENERATING PRISMA CLIENT...");
+
+  await runCommand(
+    params.jobId,
+    "npx",
+    ["prisma", "generate"],
+    backendPath
+  );
+
   console.log("✅ Backend fully generated with migrations");
 
 

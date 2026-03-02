@@ -1,63 +1,57 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
-import requests
+from flask_cors import CORS
 import os
 import time
 import threading
-from PIL import Image
-import io
+from cmo_agent import CMOAgent
 
 app = Flask(__name__)
+CORS(app)
 
 class CMOWebAgent:
     def __init__(self):
         self.model_loaded = False
+        self.agent = None
         
     def load_model(self):
-        # Simulate model loading
-        time.sleep(2)
-        self.model_loaded = True
-        return True
-    
-    def optimize_prompt(self, startup_info):
-        # Create optimized prompt for image generation
-        prompt = f"professional marketing poster with a {startup_info['brand_style']} style, industry type: {startup_info['industry']}, {startup_info['image_description']}, high quality, detailed, commercial design. make sure that there is no text on the image"
-        return prompt
+        try:
+            self.agent = CMOAgent()
+            self.model_loaded = True
+            return True
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            return False
     
     def generate_image(self, startup_info):
+        if not self.model_loaded or not self.agent:
+            return None, "Model is not loaded yet. Please wait!"
+            
         try:
-            # Create static directory if it doesn't exist
             os.makedirs("static", exist_ok=True)
             
-            # Clean filename
-            clean_name = startup_info['startup_name'].strip().replace(' ', '_').replace('\n', '').replace('\r', '')
-            invalid_chars = '<>:"/\\|?*'
-            for char in invalid_chars:
-                clean_name = clean_name.replace(char, '_')
+            # Use the local model directly
+            filename = self.agent.generate_image(startup_info)
             
-            filename = f"static/{clean_name}_marketing.png"
-            
-            # Generate prompt
-            prompt = self.optimize_prompt(startup_info)
-            
-            # Use Pollinations AI (free API)
-            api_url = f"https://image.pollinations.ai/prompt/{requests.utils.quote(prompt)}?width=512&height=512&model=flux"
-            
-            # Download generated image
-            response = requests.get(api_url, timeout=30)
-            
-            if response.status_code == 200:
-                # Save the image
-                with open(filename, 'wb') as f:
-                    f.write(response.content)
-                return filename, "Marketing image generated successfully!"
-            else:
-                return None, f"API request failed with status {response.status_code}"
+            # Move file to static dir if needed
+            if not filename.startswith("static/"):
+                import shutil
+                new_filename = f"static/{filename}"
+                shutil.move(filename, new_filename)
+                filename = new_filename
                 
+            return filename, "Marketing image generated successfully via Local SD!"
         except Exception as e:
             return None, str(e)
 
 # Global agent instance
 cmo_agent = CMOWebAgent()
+
+# Auto-load the model in the background when the server starts
+def auto_load_model():
+    print("Auto-loading Stable Diffusion Model in background...")
+    cmo_agent.load_model()
+
+threading.Thread(target=auto_load_model, daemon=True).start()
 
 @app.route('/')
 def index():

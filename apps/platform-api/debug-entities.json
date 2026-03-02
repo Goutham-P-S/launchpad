@@ -1,0 +1,187 @@
+{
+  "appType": "ecommerce",
+  "entities": [
+    {
+      "name": "Product",
+      "fields": [
+        {
+          "name": "id",
+          "type": "Int",
+          "isId": true
+        },
+        {
+          "name": "title",
+          "type": "String"
+        },
+        {
+          "name": "description",
+          "type": "String"
+        },
+        {
+          "name": "price",
+          "type": "String"
+        },
+        {
+          "name": "image_url",
+          "type": "String"
+        }
+      ],
+      "relations": [
+        {
+          "field": "category",
+          "target": "Category",
+          "type": "many-to-one"
+        },
+        {
+          "field": "orderItem",
+          "target": "OrderItem",
+          "type": "one-to-many"
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "fields": [
+        {
+          "name": "id",
+          "type": "Int",
+          "isId": true
+        },
+        {
+          "name": "email",
+          "type": "String"
+        },
+        {
+          "name": "password_hash",
+          "type": "String"
+        }
+      ],
+      "relations": [
+        {
+          "field": "address",
+          "target": "Address",
+          "type": "one-to-one"
+        },
+        {
+          "field": "order",
+          "target": "Order",
+          "type": "one-to-many"
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "fields": [
+        {
+          "name": "id",
+          "type": "Int",
+          "isId": true
+        },
+        {
+          "name": "title",
+          "type": "String"
+        }
+      ],
+      "relations": [
+        {
+          "field": "product",
+          "target": "Product",
+          "type": "one-to-many"
+        }
+      ]
+    },
+    {
+      "name": "Order",
+      "fields": [
+        {
+          "name": "id",
+          "type": "Int",
+          "isId": true
+        },
+        {
+          "name": "status",
+          "type": "String"
+        },
+        {
+          "name": "total_price",
+          "type": "String"
+        }
+      ],
+      "relations": [
+        {
+          "field": "user",
+          "target": "Customer",
+          "type": "many-to-one"
+        },
+        {
+          "field": "orderItem",
+          "target": "OrderItem",
+          "type": "one-to-many"
+        }
+      ]
+    },
+    {
+      "name": "Address",
+      "fields": [
+        {
+          "name": "id",
+          "type": "Int",
+          "isId": true
+        },
+        {
+          "name": "street",
+          "type": "String"
+        },
+        {
+          "name": "city",
+          "type": "String"
+        },
+        {
+          "name": "state",
+          "type": "String"
+        },
+        {
+          "name": "zip_code",
+          "type": "String"
+        }
+      ],
+      "relations": [
+        {
+          "field": "user",
+          "target": "Customer",
+          "type": "one-to-one"
+        }
+      ]
+    },
+    {
+      "name": "OrderItem",
+      "fields": [
+        {
+          "name": "id",
+          "type": "Int",
+          "isId": true
+        },
+        {
+          "name": "quantity",
+          "type": "String"
+        },
+        {
+          "name": "total_price_for_item",
+          "type": "String"
+        }
+      ],
+      "relations": [
+        {
+          "field": "product",
+          "target": "Product",
+          "type": "many-to-one"
+        },
+        {
+          "field": "order",
+          "target": "Order",
+          "type": "one-to-many"
+        }
+      ]
+    }
+  ]
+}

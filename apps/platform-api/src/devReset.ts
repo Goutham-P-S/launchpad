@@ -49,7 +49,7 @@ export function devResetAll(params: { repoRoot: string }) {
   } catch {}
 
   // 3️⃣ Remove network
-  safeExec("docker network rm startup_net");
+  safeExec("docker network prune -f");
 
   // 4️⃣ Delete sandbox folders
   const sandboxesPath = path.join(repoRoot, "sandboxes");

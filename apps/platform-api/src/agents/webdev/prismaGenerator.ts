@@ -26,6 +26,8 @@ datasource db {
 }
 `;
 
+
+
   const modelMap = new Map<string, any>();
 
   // 1️⃣ Normalize and register models
@@ -107,9 +109,19 @@ datasource db {
     const writtenFields = new Set<string>();
     writtenFields.add("id");
 
+    const reservedRelationNames = new Set<string>();
+    for (const rel of entity.forwardRelations) {
+      reservedRelationNames.add(toCamel(rel.targetName));
+    }
+    for (const inv of entity.inverseRelations) {
+      const fieldName = inv.isOneToOne ? toCamel(inv.targetName) : pluralize(inv.targetName);
+      reservedRelationNames.add(fieldName);
+    }
+
     for (const field of entity.fields || []) {
       const nameLowerCase = field.name.toLowerCase();
       if (nameLowerCase === "id" || nameLowerCase.endsWith("id")) continue;
+      if (reservedRelationNames.has(field.name)) continue;
 
       schema += `  ${field.name} ${field.type}\n`;
       writtenFields.add(field.name);

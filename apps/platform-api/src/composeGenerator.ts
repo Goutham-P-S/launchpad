@@ -30,7 +30,7 @@
       - /app/node_modules/.pnpm
       - /app/node_modules/.prisma
 
-    command: sh -c "npx pnpm install && npx pnpm exec prisma generate && npx pnpm exec prisma db push && npx pnpm run dev"
+    command: sh -c "npx pnpm install --config.node-linker=hoisted && npx pnpm exec prisma generate && npx pnpm exec prisma db push && npx pnpm run dev"
 
 
 

@@ -1094,14 +1094,25 @@ export default function AdminPage() {
     setError("");
     setGenerating(true);
     try {
-      const prompt = \`professional marketing poster with a \${formData.brandStyle} style, industry type: \${formData.industry}, \${formData.imageDescription}, product name \${formData.name}, high quality, detailed, commercial design. make sure that there is no text on the image\`;
-      const encodedPrompt = encodeURIComponent(prompt);
-      const url = \`https://image.pollinations.ai/prompt/\${encodedPrompt}?width=512&height=512&model=flux&nologo=true\`;
-      
-      // Since it's a GET, we just use the url directly
-      setImageUrl(url);
+      const response = await fetch("http://localhost:5000/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          startup_name: formData.name,
+          industry: formData.industry || "e-commerce",
+          target_audience: "general consumers",
+          brand_style: formData.brandStyle || "modern",
+          image_description: formData.imageDescription
+        })
+      });
+      const data = await response.json();
+      if (data.status === "success" && data.image_url) {
+        setImageUrl("http://localhost:5000" + data.image_url);
+      } else {
+        setError(data.message || "Failed to generate image");
+      }
     } catch (err: any) {
-      setError("Failed to generate image");
+      setError("Failed to connect to local Image Agent: " + err.message);
     } finally {
       setGenerating(false);
     }

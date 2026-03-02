@@ -1,0 +1,138 @@
+npm warn exec The following package was not found and will be installed: pnpm@10.30.3
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +167
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 167, reused 0, downloaded 6, added 2
+Progress: resolved 167, reused 0, downloaded 28, added 9
+Progress: resolved 167, reused 0, downloaded 47, added 11
+Progress: resolved 167, reused 0, downloaded 61, added 14
+Progress: resolved 167, reused 0, downloaded 82, added 18
+Progress: resolved 167, reused 0, downloaded 100, added 18
+Progress: resolved 167, reused 0, downloaded 105, added 19
+Progress: resolved 167, reused 0, downloaded 114, added 22
+Progress: resolved 167, reused 0, downloaded 122, added 22
+Progress: resolved 167, reused 0, downloaded 130, added 23
+Progress: resolved 167, reused 0, downloaded 142, added 24
+Progress: resolved 167, reused 0, downloaded 154, added 26
+Progress: resolved 167, reused 0, downloaded 162, added 48
+Progress: resolved 167, reused 0, downloaded 162, added 76
+Progress: resolved 167, reused 0, downloaded 164, added 120
+Progress: resolved 167, reused 0, downloaded 165, added 151
+Progress: resolved 167, reused 0, downloaded 165, added 162
+Progress: resolved 167, reused 0, downloaded 166, added 165
+Progress: resolved 167, reused 0, downloaded 166, added 166
+Progress: resolved 167, reused 0, downloaded 167, added 166
+Progress: resolved 167, reused 0, downloaded 167, added 167
+Progress: resolved 167, reused 0, downloaded 167, added 167, done
+
+dependencies:
++ @prisma/client 5.22.0
++ bcryptjs 2.4.3
++ cors 2.8.6
++ express 4.22.1
++ jsonwebtoken 9.0.3
++ zod 3.25.76
+
+devDependencies:
++ @types/cors 2.8.19
++ @types/express 4.17.25
++ @types/node 20.19.33
++ prisma 5.22.0
++ ts-node 10.9.2
++ ts-node-dev 2.0.0
++ typescript 5.9.3
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: @prisma/client@5.22.0, @prisma/engines@5.22.0,      │
+│   prisma@5.22.0.                                                             │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 28.7s using pnpm v10.30.3
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+
+✔ Generated Prisma Client (v5.22.0) to ./node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/@prisma/client in 84ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Curious about the SQL queries Prisma ORM generates? Optimize helps you enhance your visibility: https://pris.ly/tip-2-optimize
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "startupdb", schema "public" at "db:5432"
+
+🚀  Your database is now in sync with your Prisma schema. Done in 130ms
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[G✔ Generated Prisma Client (v5.22.0) to ./node_modules/.pnpm/@prisma+client@5.22.
+0_prisma@5.22.0/node_modules/@prisma/client in 70ms
+
+┌─────────────────────────────────────────────────────────┐
+│  Update available 5.22.0 -> 7.4.2                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+
+> startup-backend@1.0.0 dev /app
+> ts-node-dev --respawn --transpile-only src/index.ts
+
+[INFO] 05:42:15 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected
+🌱 Seeding roles and admin user...
+✅ Default admin created:
+📧 Email: admin@example.com
+🚀 Backend running on port 4000
+❌ Error: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Object.findAll (/app/src/services/product.service.ts:16:39)
+    at findAll (/app/src/controllers/product.controller.ts:14:41)
+    at /app/src/utils/asyncHandler.ts:4:21
+    at Layer.handle [as handle_request] (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/layer.js:95:5)
+    at /app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:346:12)
+    at next (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:280:10)
+❌ Error: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Object.findAll (/app/src/services/product.service.ts:16:39)
+    at findAll (/app/src/controllers/product.controller.ts:14:41)
+    at /app/src/utils/asyncHandler.ts:4:21
+    at Layer.handle [as handle_request] (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/layer.js:95:5)
+    at /app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:346:12)
+    at next (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:280:10)
+❌ Error: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Object.findAll (/app/src/services/product.service.ts:16:39)
+    at findAll (/app/src/controllers/product.controller.ts:14:41)
+    at /app/src/utils/asyncHandler.ts:4:21
+    at Layer.handle [as handle_request] (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/layer.js:95:5)
+    at /app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:346:12)
+    at next (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:280:10)
+❌ Error: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at Object.findAll (/app/src/services/product.service.ts:16:39)
+    at findAll (/app/src/controllers/product.controller.ts:14:41)
+    at /app/src/utils/asyncHandler.ts:4:21
+    at Layer.handle [as handle_request] (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/layer.js:95:5)
+    at /app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:346:12)
+    at next (/app/node_modules/.pnpm/express@4.22.1/node_modules/express/lib/router/index.js:280:10)

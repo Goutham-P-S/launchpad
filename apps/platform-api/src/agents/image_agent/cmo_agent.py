@@ -7,11 +7,18 @@ class CMOAgent:
     def __init__(self):
         print("Loading Stable Diffusion model...")
         model_id = "runwayml/stable-diffusion-v1-5"
+        
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f"CUDA status: {torch.cuda.is_available()}, Using device: {self.device}")
+        
+        # Use float16 only for CUDA, fallback to float32 for CPU
+        dtype = torch.float16 if self.device == "cuda" else torch.float32
+        
         self.pipe = StableDiffusionPipeline.from_pretrained(
             model_id,
-            torch_dtype=torch.float16,
+            torch_dtype=dtype,
         )
-        self.pipe = self.pipe.to("cuda")
+        self.pipe = self.pipe.to(self.device)
         self.tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
         print("Model loaded successfully!")
     
