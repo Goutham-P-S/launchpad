@@ -1129,10 +1129,13 @@ export default function AdminPage() {
     try {
       await api.post("${endpoint}", {
         name: formData.name,
-        price: parseFloat(formData.price),
+        title: formData.name,
+        price: formData.price.toString(),
         description: formData.description,
         image: imageUrl,
-        imageUrl: imageUrl
+        imageUrl: imageUrl,
+        stock: "100",
+        inventory: "100"
       });
       setSuccess("Product created successfully!");
       setFormData({ name: "", price: "", description: "", industry: "e-commerce", brandStyle: "modern", imageDescription: "" });
@@ -1326,7 +1329,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  server: { host: "0.0.0.0", port: 3000 }
+  server: { host: "0.0.0.0", port: 3000, allowedHosts: ['web', 'localhost', 'host.docker.internal', '0.0.0.0'] }
 });
 
 `);

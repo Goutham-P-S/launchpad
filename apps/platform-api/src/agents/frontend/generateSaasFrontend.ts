@@ -123,6 +123,9 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    allowedHosts: ['web', 'localhost', 'host.docker.internal', '0.0.0.0']
+  }
 });
 `);
 

@@ -1,0 +1,51 @@
+// Launchpad Control Flow Diagram
+digraph {
+	nodesep=0.6 rankdir=TB ranksep=0.8
+	node [color="#4b5563" fillcolor="#f3f4f6" fontname=Helvetica penwidth=1.5 shape=box style="rounded,filled"]
+	edge [color="#6b7280" fontname=Helvetica fontsize=10 penwidth=1.2]
+	subgraph cluster_ui {
+		color="#9ca3af" label="Launchpad Admin UI" style=dashed
+		A [label="User Input Form:
+Requirement, Templates,
+API Integrations" color="#2563eb" fillcolor="#dbeafe"]
+		B [label="React Frontend API Call" color="#2563eb" fillcolor="#dbeafe"]
+		A -> B [label=" Submit "]
+	}
+	subgraph cluster_orchestrator {
+		color="#9ca3af" label="Macro-Orchestrator API (Express.js)" style=dashed
+		C [label="Job Queue Worker
+(Redis/BullMQ)" color="#ca8a04" fillcolor="#fef08a"]
+		D [label="Sandbox Supervisor
+(Workspace + Port Allocator)" color="#ca8a04" fillcolor="#fef08a"]
+		E1 [label="Frontend Agent
+LLM Planner & Builder" color="#ea580c" fillcolor="#fed7aa"]
+		E2 [label="Backend Server Agent
+(Prisma Schema generator)" color="#ea580c" fillcolor="#fed7aa"]
+		E3 [label="n8n Workflow Planner
+(Zod validation & Webhooks)" color="#ea580c" fillcolor="#fed7aa"]
+	}
+	subgraph cluster_docker {
+		color="#9ca3af" label="Isolated Docker Compose Sandbox" style=dashed
+		F1 [label="React/Vite User Application" color="#16a34a" fillcolor="#bbf7d0"]
+		F2 [label="Express Backend API" color="#16a34a" fillcolor="#bbf7d0"]
+		F3 [label="PostgreSQL Database" color="#16a34a" fillcolor="#bbf7d0"]
+		F4 [label="n8n Automation Engine" color="#16a34a" fillcolor="#bbf7d0"]
+	}
+	G [label="External APIs
+(SendGrid / Twilio)" color="#4b5563" fillcolor="#e5e7eb" shape=cylinder]
+	B -> C [label=" POST HTTP Payload "]
+	C -> D [label=" Dispatch Orchestration"]
+	D -> E1 [label=" Async Compilation"]
+	D -> E2 [label=" AST Synthesis"]
+	D -> E3 [label=" IRv1 Synthesis"]
+	E2 -> E3 [label=" Passes normalized DB schema "]
+	E1 -> F1 [label=" Write JSX & CSS"]
+	E2 -> F2 [label=" Write Controllers"]
+	E2 -> F3 [label=" Prisma migrate"]
+	E3 -> F4 [label=" Compile n8n Workflows
+(Credentials Injected)"]
+	F1 -> F2 [label=" REST API Fetch" style=dashed]
+	F2 -> F3 [label=" Query ORM" style=dashed]
+	F2 -> F4 [label=" DB Entity Triggers Webhooks" arrowtail=diamond style=dashed]
+	F4 -> G [label=" Bearer Auth POST" color="#ef4444" dir=forward penwidth=2]
+}

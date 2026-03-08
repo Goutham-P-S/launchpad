@@ -4,10 +4,11 @@ export type IRv1 = {
   flows: Array<{
     name: string;
     trigger: {
-      type: "cron";
-      everyMinutes: number;
+      type: "cron" | "webhook";
+      everyMinutes?: number;
+      webhookPath?: string;
     };
-    source: {
+    source?: {
       type: "http";
       path: string; // internal web API path
     };
@@ -16,8 +17,9 @@ export type IRv1 = {
       instruction: string; // prompt or message template
     };
     sink: {
-      type: "platform-api" | "mock-email";
+      type: "platform-api" | "mock-email" | "email" | "whatsapp";
       path?: string; // platform API path
+      integrations?: any; // To hold credentials injected from frontend
     };
   }>;
 };

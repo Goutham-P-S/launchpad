@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchStartups, type StartupRecord } from "../api";
+import { CirclePoundSterling, ShoppingCart, BarChart, Bot, Target, Globe, Smartphone, Microscope, Lightbulb, Building, Palette, Activity, Database, Plus, FolderOpen } from "lucide-react";
 
 function StatusBadge({ status }: { status: StartupRecord["status"] }) {
     const labels: Record<string, string> = {
@@ -17,27 +18,32 @@ function StartupCard({ startup, onClick }: { startup: StartupRecord; onClick: ()
     const createdDate = createdAt.toLocaleDateString("en-US", {
         month: "short", day: "numeric", year: "numeric",
     });
-    const emojis = ["🛒", "📊", "🤖", "🎯", "🌐", "📱", "🔬", "💡", "🏗", "🎨"];
-    const emoji = emojis[startup.startupId % emojis.length] || "🚀";
+
+    const icons = [ShoppingCart, BarChart, Bot, Target, Globe, Smartphone, Microscope, Lightbulb, Building, Palette];
+    const IconComponent = icons[startup.startupId % icons.length];
 
     return (
         <div className="startup-card" onClick={onClick} role="button" tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && onClick()}>
-            <div className="startup-card-header">
-                <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                    <div className="startup-card-icon">{emoji}</div>
-                    <div>
-                        <div className="startup-name">{startup.sandboxName || "Unnamed Sandbox"}</div>
+            <div className="startup-card-header" style={{ alignItems: "center" }}>
+                <div style={{ display: "flex", gap: 12, alignItems: "center", minWidth: 0, flex: 1 }}>
+                    <div className="startup-card-icon">
+                        <IconComponent size={20} color="var(--text-primary)" />
+                    </div>
+                    <div style={{ minWidth: 0, overflow: "hidden" }}>
+                        <div className="startup-name" title={startup.sandboxName}>{startup.sandboxName || "Unnamed Sandbox"}</div>
                         <div className="startup-meta">Created {createdDate}</div>
                     </div>
                 </div>
-                <StatusBadge status={startup.status || "idle"} />
+                <div style={{ flexShrink: 0, marginLeft: 8 }}>
+                    <StatusBadge status={startup.status || "idle"} />
+                </div>
             </div>
 
             <div className="port-pills">
-                <span className="port-pill">🌐 :{startup.ports?.webPort || '---'}</span>
-                <span className="port-pill">⚡ :{startup.ports?.n8nPort || '---'}</span>
-                <span className="port-pill">🗄 :{startup.ports?.dbPort || '---'}</span>
+                <span className="port-pill"><Globe size={12} style={{ marginRight: 4 }} /> :{startup.ports?.webPort || '---'}</span>
+                <span className="port-pill"><Activity size={12} style={{ marginRight: 4 }} /> :{startup.ports?.n8nPort || '---'}</span>
+                <span className="port-pill"><Database size={12} style={{ marginRight: 4 }} /> :{startup.ports?.dbPort || '---'}</span>
             </div>
 
             <div style={{ display: "flex", gap: 8 }}>
@@ -79,11 +85,15 @@ export default function DashboardPage() {
         <div className="dashboard-page">
             {/* Hero */}
             <div className="hero-banner">
-                <div className="hero-title">Your Startup Launchpad 🚀</div>
-                <div className="hero-sub">
-                    Describe your idea — we'll generate the backend, frontend, and workflow automation, all sandboxed in Docker.
+                <div className="hero-title" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    Your StartupOptima 
                 </div>
-                <div className="hero-emoji">🏗</div>
+                <div className="hero-sub">
+                    Describe your idea  an let us build it for you
+                </div>
+                <div className="hero-emoji">
+                    <CirclePoundSterling size={120} strokeWidth={1} color="rgba(255,255,255,0.06)" style={{ transform: 'rotate(15deg) translateY(-20px)' }} />
+                </div>
             </div>
 
             {/* Stats */}
@@ -107,10 +117,14 @@ export default function DashboardPage() {
             </div>
 
             {/* Grid */}
-            <div className="section-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                <div className="section-title">Sandboxed Startups</div>
-                <button className="btn btn-primary" onClick={() => navigate("/create")}>
-                    ✨ Create New
+            <div style={{ marginBottom: 24 }}>
+                <div className="section-title" style={{ marginBottom: 12 }}>Sandboxed Startups</div>
+                <button
+                    className="btn btn-primary"
+                    onClick={() => navigate("/create")}
+                    style={{ width: "100%", justifyContent: "center", padding: "12px" }}
+                >
+                    <Plus size={18} strokeWidth={2.5} /> Create New
                 </button>
             </div>
 
@@ -132,7 +146,7 @@ export default function DashboardPage() {
                     {/* CTA to create */}
                     <div className="cta-card" onClick={() => navigate("/create")} role="button" tabIndex={0}
                         onKeyDown={(e) => e.key === "Enter" && navigate("/create")}>
-                        <div className="cta-card-icon">＋</div>
+                        <div className="cta-card-icon"><Plus size={32} color="var(--text-muted)" /></div>
                         <div className="cta-card-text">Launch a new startup</div>
                     </div>
                 </div>
@@ -140,7 +154,7 @@ export default function DashboardPage() {
 
             {!loading && startups.length === 0 && (
                 <div className="empty-state">
-                    <div className="empty-icon" style={{ fontSize: 40, marginBottom: 12 }}>📂</div>
+                    <div className="empty-icon" style={{ marginBottom: 12 }}><FolderOpen size={48} strokeWidth={1.5} color="var(--text-muted)" /></div>
                     <p>No startups found. Create one to get started!</p>
                 </div>
             )}

@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { Home, Plus, UploadCloud } from "lucide-react";
 
 const navItems = [
-    { to: "/", icon: "🏠", label: "Dashboard" },
-    { to: "/create", icon: "✨", label: "Create Startup" },
+    { to: "/", icon: <Home size={18} />, label: "Dashboard" },
+    { to: "/create", icon: <Plus size={18} />, label: "Create Startup" },
 ];
 
 export default function Sidebar() {
@@ -10,8 +11,10 @@ export default function Sidebar() {
     return (
         <aside className="sidebar">
             <div className="sidebar-logo">
-                <div className="sidebar-logo-icon">🚀</div>
-                <span className="sidebar-logo-text">LaunchPad</span>
+                <div className="sidebar-logo-icon">
+                    <UploadCloud size={20} color="white" />
+                </div>
+                <span className="sidebar-logo-text">StartupOptima</span>
             </div>
 
             <div className="sidebar-section-label">Navigation</div>
@@ -23,7 +26,9 @@ export default function Sidebar() {
                     end={item.to === "/"}
                     className={({ isActive }) => `nav-item${isActive ? " active" : ""}`}
                 >
-                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-icon" style={{ display: 'flex', alignItems: 'center', opacity: 1 }}>
+                        {item.icon}
+                    </span>
                     {item.label}
                 </NavLink>
             ))}

@@ -2,8 +2,20 @@ import axios from "axios";
 
 const API_BASE = "http://localhost:5050";
 
-export async function startOrchestration(prompt: string) {
-  const res = await axios.post(`${API_BASE}/orchestrate`, { prompt });
+export interface N8nIntegrations {
+  email?: {
+    apiKey: string;
+    fromEmail: string;
+  };
+  whatsapp?: {
+    accountSid: string;
+    authToken: string;
+    fromNumber: string;
+  };
+}
+
+export async function startOrchestration(prompt: string, integrations?: N8nIntegrations) {
+  const res = await axios.post(`${API_BASE}/orchestrate`, { prompt, integrations });
   return res.data.jobId as string;
 }
 

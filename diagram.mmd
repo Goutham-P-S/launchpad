@@ -1,0 +1,46 @@
+graph TD
+    classDef ui fill:#dbeafe,stroke:#2563eb,stroke-width:2px;
+    classDef orch fill:#fef08a,stroke:#ca8a04,stroke-width:2px;
+    classDef agent fill:#fed7aa,stroke:#ea580c,stroke-width:2px;
+    classDef docker fill:#bbf7d0,stroke:#16a34a,stroke-width:2px;
+    classDef external fill:#e5e7eb,stroke:#4b5563,stroke-width:2px;
+
+    subgraph UserInterface ["StartupOptima UI (React)"]
+        A["User Input Form (Requirements, Integrations)"]:::ui
+        B["API Client Submission"]:::ui
+    end
+
+    subgraph MacroOrchestrator ["Central Orchestration API (Express)"]
+        C["BullMQ Job Queue Worker"]:::orch
+        D["Sandbox Supervisor (Port Allocator)"]:::orch
+        E1["LLM Frontend Builder (Vite AST)"]:::agent
+        E2["LLM Backend Schema Generator (Prisma)"]:::agent
+        E3["LLM n8n Workflow Planner (IR Validation)"]:::agent
+    end
+
+    subgraph Sandbox ["Isolated Docker Compose Runtime"]
+        F1["React Application Frontend"]:::docker
+        F2["Express Backend API"]:::docker
+        F3["PostgreSQL Database"]:::docker
+        F4["n8n Automation Engine"]:::docker
+    end
+
+    G[("External API (Twilio / SendGrid)")]:::external
+
+    A --> B
+    B -->|POST Payload| C
+    C -->|Dispatch| D
+    D -->|Async Compile| E1
+    D -->|AST Synthesis| E2
+    D -->|IRv1 Output| E3
+    E2 -->|Normalized Schema| E3
+
+    E1 -->|Write JSX Code| F1
+    E2 -->|Migrate Schemas| F3
+    E2 -->|Write Controllers| F2
+    E3 -->|Inject Credentials & Deploy| F4
+
+    F1 -. REST API Fetch .-> F2
+    F2 -. Database Query .-> F3
+    F2 -- Webhook Triggers --> F4
+    F4 == Authorized POST ==> G

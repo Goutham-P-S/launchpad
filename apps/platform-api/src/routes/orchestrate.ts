@@ -6,7 +6,7 @@ import { enqueueJob } from "../queue/jobQueue";
 const router = Router();
 
 router.post("/", async (req, res) => {
-  const { prompt } = req.body;
+  const { prompt, integrations } = req.body;
 
   if (!prompt) {
     return res.status(400).json({ error: "Prompt required" });
@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
 
   createJob(jobId);
 
-  enqueueJob(jobId, prompt);
+  enqueueJob(jobId, prompt, integrations);
 
   res.json({ jobId });
 });

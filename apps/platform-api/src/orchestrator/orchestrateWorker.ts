@@ -26,7 +26,8 @@ function sleep(ms: number) {
 
 export async function runOrchestration(
   jobId: string,
-  prompt: string
+  prompt: string,
+  integrations?: any
 ) {
   try {
     //
@@ -60,7 +61,8 @@ export async function runOrchestration(
       startupId: startup.startupId,
       sandboxPath: startup.sandboxPath,
       requirement: prompt,
-      jobId
+      jobId,
+      integrations
     });
 
     streamLog(jobId, "Code generation completed.");
@@ -142,7 +144,8 @@ export async function runOrchestration(
       context: {
         startupId: startup.startupId,
         sandboxName: startup.sandboxName,
-        backendPlan
+        backendPlan,
+        integrations
       }
     });
 

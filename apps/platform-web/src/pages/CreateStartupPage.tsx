@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { startOrchestration, cancelJob } from "../api";
+import type { N8nIntegrations } from "../api";
+import { Lightbulb, Plug, Rocket, X, FileText, XCircle, ArrowLeft, CheckCircle, Globe, Activity } from "lucide-react";
 
 type Step = "input" | "deploying" | "done";
 
@@ -23,6 +25,10 @@ export default function CreateStartupPage() {
     const navigate = useNavigate();
     const [step, setStep] = useState<Step>("input");
     const [prompt, setPrompt] = useState("");
+    const [enableEmail, setEnableEmail] = useState(false);
+    const [enableWhatsapp, setEnableWhatsapp] = useState(false);
+    const [emailConfig, setEmailConfig] = useState({ apiKey: "", fromEmail: "" });
+    const [waConfig, setWaConfig] = useState({ accountSid: "", authToken: "", fromNumber: "" });
     const [logs, setLogs] = useState<LogLine[]>([]);
     const [jobId, setJobId] = useState<string | null>(null);
     const [result, setResult] = useState<DeployResult | null>(null);
@@ -89,8 +95,17 @@ export default function CreateStartupPage() {
         setLogs([]);
         setError(null);
         addLog("🚀 Initialising deployment pipeline...");
+
+        const integrations: N8nIntegrations = {};
+        if (enableEmail && emailConfig.apiKey && emailConfig.fromEmail) {
+            integrations.email = emailConfig;
+        }
+        if (enableWhatsapp && waConfig.accountSid && waConfig.authToken && waConfig.fromNumber) {
+            integrations.whatsapp = waConfig;
+        }
+
         try {
-            const id = await startOrchestration(prompt.trim());
+            const id = await startOrchestration(prompt.trim(), integrations);
             setJobId(id);
             addLog(`📦 Job created: ${id}`);
         } catch (e: any) {
@@ -135,7 +150,9 @@ export default function CreateStartupPage() {
             {/* ─── Step 0: Input ─── */}
             {step === "input" && (
                 <div className="card">
-                    <div className="section-title" style={{ marginBottom: 12 }}>💡 Describe your startup idea</div>
+                    <div className="section-title" style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Lightbulb size={18} color="var(--purple-400)" /> Describe your startup idea
+                    </div>
                     <p style={{ color: "var(--text-secondary)", marginBottom: 20, fontSize: 13 }}>
                         Be as specific as you like — mention the industry, key features, and target users.
                     </p>
@@ -165,13 +182,47 @@ export default function CreateStartupPage() {
                         ))}
                     </div>
 
+                    <div style={{ marginTop: 24, padding: 16, border: "1px solid var(--border)", borderRadius: 8 }}>
+                        <div className="section-title" style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <Plug size={18} /> n8n AI Integrations (Optional)
+                        </div>
+                        <p style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 16 }}>
+                            Configure credentials to dynamically generate notification workflows when activities (e.g. products added) occur.
+                        </p>
+
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                            <input type="checkbox" id="chk-email" checked={enableEmail} onChange={e => setEnableEmail(e.target.checked)} />
+                            <label htmlFor="chk-email" style={{ fontSize: 14, fontWeight: 500 }}>Enable Email Agent (SendGrid)</label>
+                        </div>
+                        {enableEmail && (
+                            <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+                                <input className="input-field" placeholder="SendGrid API Key" value={emailConfig.apiKey} onChange={e => setEmailConfig(c => ({ ...c, apiKey: e.target.value }))} style={{ flex: 1 }} />
+                                <input className="input-field" placeholder="From Email (e.g. admin@domain.com)" value={emailConfig.fromEmail} onChange={e => setEmailConfig(c => ({ ...c, fromEmail: e.target.value }))} style={{ flex: 1 }} />
+                            </div>
+                        )}
+
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                            <input type="checkbox" id="chk-wa" checked={enableWhatsapp} onChange={e => setEnableWhatsapp(e.target.checked)} />
+                            <label htmlFor="chk-wa" style={{ fontSize: 14, fontWeight: 500 }}>Enable WhatsApp Agent (Twilio)</label>
+                        </div>
+                        {enableWhatsapp && (
+                            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 8 }}>
+                                <div style={{ display: "flex", gap: 12 }}>
+                                    <input className="input-field" placeholder="Twilio Account SID" value={waConfig.accountSid} onChange={e => setWaConfig(c => ({ ...c, accountSid: e.target.value }))} style={{ flex: 1 }} />
+                                    <input className="input-field" placeholder="Twilio Auth Token" type="password" value={waConfig.authToken} onChange={e => setWaConfig(c => ({ ...c, authToken: e.target.value }))} style={{ flex: 1 }} />
+                                </div>
+                                <input className="input-field" placeholder="Twilio From Number (e.g. +1234567890)" value={waConfig.fromNumber} onChange={e => setWaConfig(c => ({ ...c, fromNumber: e.target.value }))} />
+                            </div>
+                        )}
+                    </div>
+
                     <div style={{ marginTop: 24 }}>
                         <button
                             className="btn btn-primary"
                             disabled={!prompt.trim()}
                             onClick={handleDeploy}
                             style={{ width: "100%", justifyContent: "center", padding: 14 }}>
-                            ✨ Generate &amp; Deploy Startup
+                            <Rocket size={18} /> Generate &amp; Deploy Startup
                         </button>
                     </div>
                 </div>
@@ -188,8 +239,8 @@ export default function CreateStartupPage() {
                                 LLM is generating your backend + frontend + Docker stack…
                             </div>
                         </div>
-                        <button className="btn btn-danger" style={{ marginLeft: "auto" }} onClick={handleCancel}>
-                            ✕ Cancel
+                        <button className="btn btn-danger" style={{ marginLeft: "auto", display: 'flex', alignItems: 'center', gap: 6 }} onClick={handleCancel}>
+                            <X size={16} /> Cancel
                         </button>
                     </div>
 
@@ -201,7 +252,7 @@ export default function CreateStartupPage() {
 
                     {/* Live log stream */}
                     <div>
-                        <div className="section-title">📄 Build Logs</div>
+                        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FileText size={18} /> Build Logs</div>
                         <div className="log-stream">
                             {logs.map((l, i) => (
                                 <div key={i} className="log-line">
@@ -217,10 +268,10 @@ export default function CreateStartupPage() {
 
                     {error && (
                         <div className="card" style={{ borderColor: "rgba(248,113,113,.3)", background: "rgba(248,113,113,.05)" }}>
-                            <div style={{ color: "var(--rose-400)", fontWeight: 600 }}>❌ Deployment failed</div>
+                            <div style={{ color: "var(--rose-400)", fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}><XCircle size={18} /> Deployment failed</div>
                             <div style={{ color: "var(--text-secondary)", fontSize: 13, marginTop: 4 }}>{error}</div>
-                            <button className="btn btn-ghost" style={{ marginTop: 12 }} onClick={() => setStep("input")}>
-                                ← Try again
+                            <button className="btn btn-ghost" style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => setStep("input")}>
+                                <ArrowLeft size={16} /> Try again
                             </button>
                         </div>
                     )}
@@ -231,7 +282,7 @@ export default function CreateStartupPage() {
             {step === "done" && result && (
                 <div className="card">
                     <div className="success-screen">
-                        <div className="success-icon">🎉</div>
+                        <div className="success-icon"><CheckCircle size={56} color="var(--green-400)" /></div>
                         <div style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)" }}>
                             Your startup is live!
                         </div>
@@ -241,13 +292,13 @@ export default function CreateStartupPage() {
 
                         <div className="detail-links-grid" style={{ width: "100%", marginTop: 8 }}>
                             <div className="link-card">
-                                <div className="link-card-label">🌐 Web App</div>
+                                <div className="link-card-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Globe size={14} /> Web App</div>
                                 <a href={result.webUrl} target="_blank" rel="noreferrer" className="link-card-url">
                                     {result.webUrl}
                                 </a>
                             </div>
                             <div className="link-card">
-                                <div className="link-card-label">⚡ n8n Workflows</div>
+                                <div className="link-card-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Activity size={14} /> n8n Workflows</div>
                                 <a href={result.n8nUrl} target="_blank" rel="noreferrer" className="link-card-url">
                                     {result.n8nUrl}
                                 </a>
@@ -255,8 +306,8 @@ export default function CreateStartupPage() {
                         </div>
 
                         <div style={{ display: "flex", gap: 12, marginTop: 4 }}>
-                            <button className="btn btn-primary" onClick={() => navigate("/")}>
-                                ← Back to Dashboard
+                            <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => navigate("/")}>
+                                <ArrowLeft size={16} /> Back to Dashboard
                             </button>
                             <button className="btn btn-ghost" onClick={() => {
                                 setStep("input");

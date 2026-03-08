@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchStartup, startContainersApi, stopContainersApi, patchStartupStatus, type StartupRecord } from "../api";
+import { Rocket, ShoppingCart, BarChart, Bot, Target, Globe, Smartphone, Microscope, Lightbulb, Building, Palette, AlertTriangle, LinkIcon, Activity, Database, Settings, FolderOpen, Play, Square } from "lucide-react";
 
 function StatusBadge({ status }: { status: StartupRecord["status"] }) {
     const labels: Record<string, string> = {
@@ -72,7 +73,9 @@ export default function StartupDetailPage() {
         <div>
             <div className="back-link" onClick={() => navigate("/")}>← Back to Dashboard</div>
             <div className="card" style={{ borderColor: "rgba(248,113,113,.3)", background: "rgba(248,113,113,.05)", padding: 24 }}>
-                <div style={{ color: "var(--rose-400)", fontWeight: 600 }}>⚠️ {error ?? "Startup not found"}</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center", color: "var(--rose-400)", fontWeight: 600 }}>
+                    <AlertTriangle size={20} /> {error ?? "Startup not found"}
+                </div>
             </div>
         </div>
     );
@@ -81,8 +84,8 @@ export default function StartupDetailPage() {
     const createdDate = createdAt.toLocaleString("en-US", {
         dateStyle: "medium", timeStyle: "short",
     });
-    const emojis = ["🛒", "📊", "🤖", "🎯", "🌐", "📱", "🔬", "💡", "🏗", "🎨"];
-    const emoji = emojis[startup.startupId % emojis.length] || "🚀";
+    const icons = [ShoppingCart, BarChart, Bot, Target, Globe, Smartphone, Microscope, Lightbulb, Building, Palette];
+    const IconComponent = icons[startup.startupId % icons.length] || Rocket;
 
     // Safety check for ports
     const webPort = startup.ports?.webPort;
@@ -100,7 +103,9 @@ export default function StartupDetailPage() {
 
             {/* Header */}
             <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}>
-                <div className="startup-card-icon" style={{ width: 52, height: 52, fontSize: 26 }}>{emoji}</div>
+                <div className="startup-card-icon" style={{ width: 52, height: 52, fontSize: 26 }}>
+                    <IconComponent size={28} color="var(--text-primary)" />
+                </div>
                 <div>
                     <div style={{ fontSize: 22, fontWeight: 800, color: "var(--text-primary)" }}>
                         {startup.sandboxName || "Unnamed Startup"}
@@ -118,22 +123,22 @@ export default function StartupDetailPage() {
                             className="btn btn-success"
                             disabled={actionLoading || startup.status === "building"}
                             onClick={handleStart}>
-                            {actionLoading ? "Starting…" : "▶ Start"}
+                            {actionLoading ? "Starting…" : <><Play size={16} /> Start</>}
                         </button>
                     )}
                     {startup.status === "running" && (
                         <button className="btn btn-danger" disabled={actionLoading} onClick={handleStop}>
-                            {actionLoading ? "Stopping…" : "⏹ Stop"}
+                            {actionLoading ? "Stopping…" : <><Square size={16} /> Stop</>}
                         </button>
                     )}
                 </div>
             </div>
 
             {/* Access Links */}
-            <div className="section-title">🔗 Access Links</div>
+            <div className="section-title" style={{ display: "flex", alignItems: "center", gap: 8 }}><LinkIcon size={18} /> Access Links</div>
             <div className="detail-links-grid">
                 <div className="link-card">
-                    <div className="link-card-label">🌐 Web App</div>
+                    <div className="link-card-label" style={{ display: "flex", alignItems: "center", gap: 6 }}><Globe size={14} /> Web App</div>
                     {webUrl ? (
                         <a href={webUrl} target="_blank" rel="noreferrer" className="link-card-url">{webUrl}</a>
                     ) : (
@@ -141,7 +146,7 @@ export default function StartupDetailPage() {
                     )}
                 </div>
                 <div className="link-card">
-                    <div className="link-card-label">⚡ n8n Workflows</div>
+                    <div className="link-card-label" style={{ display: "flex", alignItems: "center", gap: 6 }}><Activity size={14} /> n8n Workflows</div>
                     {n8nUrl ? (
                         <a href={n8nUrl} target="_blank" rel="noreferrer" className="link-card-url">{n8nUrl}</a>
                     ) : (
@@ -149,7 +154,7 @@ export default function StartupDetailPage() {
                     )}
                 </div>
                 <div className="link-card">
-                    <div className="link-card-label">🗄 Database</div>
+                    <div className="link-card-label" style={{ display: "flex", alignItems: "center", gap: 6 }}><Database size={14} /> Database</div>
                     <div className="link-card-url">{dbInfo}</div>
                 </div>
             </div>
@@ -157,7 +162,7 @@ export default function StartupDetailPage() {
             <div className="divider" />
 
             {/* Config Details */}
-            <div className="section-title">⚙️ Configuration</div>
+            <div className="section-title" style={{ display: "flex", alignItems: "center", gap: 8 }}><Settings size={18} /> Configuration</div>
             <div className="card" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 20, padding: 24 }}>
                 <div>
                     <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 4 }}>Sandbox ID</div>
@@ -186,7 +191,7 @@ export default function StartupDetailPage() {
             <div className="divider" />
 
             {/* Sandbox path */}
-            <div className="section-title">📂 Sandbox Path</div>
+            <div className="section-title" style={{ display: "flex", alignItems: "center", gap: 8 }}><FolderOpen size={18} /> Sandbox Path</div>
             <div className="card" style={{ padding: "14px 20px" }}>
                 <code style={{ color: "var(--cyan-400)", fontSize: 12 }}>{startup.sandboxPath || 'N/A'}</code>
             </div>

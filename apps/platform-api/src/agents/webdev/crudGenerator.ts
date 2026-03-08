@@ -22,7 +22,8 @@ function mapPrismaTypeToZod(type: string) {
 
 export function generateCrudForEntity(
   backendPath: string,
-  entity: any
+  entity: any,
+  integrations?: any
 ) {
   const model = entity.name;
   const lower = model.toLowerCase();
@@ -141,6 +142,18 @@ export const ${model}Controller = {
 
   create: async (req: Request, res: Response) => {
     const result = await ${model}Service.create(req.body);
+
+    // Dynamic n8n Webhook trigger
+    try {
+      await fetch("http://n8n:5678/webhook/" + "${lower}-created", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(result)
+      });
+    } catch (err) {
+      console.log("Failed to trigger n8n webhook for ${model}", err);
+    }
+
     res.json(success(result));
   },
 
@@ -190,35 +203,28 @@ const router = Router();
 
 router.post(
   "/",
-  authenticate,
-  authorize("admin"), // remove if you want open creation
   validate(create${model}Schema),
   asyncHandler(${model}Controller.create)
 );
 
 router.get(
   "/",
-  // remove if public
   asyncHandler(${model}Controller.findAll)
 );
 
 router.get(
   "/:id",
-  // remove if public
   asyncHandler(${model}Controller.findOne)
 );
 
 router.put(
   "/:id",
-  authenticate,
   validate(update${model}Schema),
   asyncHandler(${model}Controller.update)
 );
 
 router.delete(
   "/:id",
-  authenticate,
-  authorize("admin"),
   asyncHandler(${model}Controller.delete)
 );
 

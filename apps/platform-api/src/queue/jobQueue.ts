@@ -4,10 +4,10 @@ import { setStatus } from "../orchestrator/statusUtils";
 const MAX_CONCURRENT_JOBS = 2;
 
 let running = 0;
-const queue: { jobId: string; prompt: string }[] = [];
+const queue: { jobId: string; prompt: string; integrations?: any }[] = [];
 
-export function enqueueJob(jobId: string, prompt: string) {
-  queue.push({ jobId, prompt });
+export function enqueueJob(jobId: string, prompt: string, integrations?: any) {
+  queue.push({ jobId, prompt, integrations });
   processQueue();
 }
 
@@ -20,8 +20,8 @@ function processQueue() {
 
   running++;
 
-  runOrchestration(job.jobId, job.prompt)
-    .catch(() => {})
+  runOrchestration(job.jobId, job.prompt, job.integrations)
+    .catch(() => { })
     .finally(() => {
       running--;
       processQueue();

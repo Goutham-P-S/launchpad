@@ -33,6 +33,7 @@ STRICT RULES:
 - Do NOT include id fields.
 - Do NOT include foreignKey fields.
 - Do NOT include Prisma syntax.
+- For e-commerce, the primary entity MUST be named "Product". It MUST have EXACTLY these fields: "name", "price", "description", "imageUrl", "stock". Do not invent synonyms like "title" or "priceAmount".
 
 Return format:
 

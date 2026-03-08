@@ -134,14 +134,14 @@ datasource db {
 
       if (!writtenFields.has(fkName)) {
         if (rel.isOneToOne) {
-          schema += `  ${fkName} Int @unique\n`;
+          schema += `  ${fkName} Int? @unique\n`;
         } else {
-          schema += `  ${fkName} Int\n`;
+          schema += `  ${fkName} Int?\n`;
         }
         writtenFields.add(fkName);
       }
 
-      schema += `  ${camelTarget} ${rel.targetName}${rel.isOneToOne ? '?' : ''} @relation("${rel.relationName}", fields: [${fkName}], references: [id])\n`;
+      schema += `  ${camelTarget} ${rel.targetName}? @relation("${rel.relationName}", fields: [${fkName}], references: [id])\n`;
     }
 
     // Write Inverse relations (no FK)

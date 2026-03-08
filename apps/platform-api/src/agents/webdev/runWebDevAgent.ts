@@ -49,6 +49,7 @@ export async function runWebDevAgent(params: {
   sandboxPath: string;
   requirement: string;
   jobId: string;
+  integrations?: any;
 }) {
   console.log("🧠 Web Dev Agent starting...");
 
@@ -87,7 +88,7 @@ export async function runWebDevAgent(params: {
   // 5️⃣ Generate CRUD per entity
   //
   for (const entity of plan.entities) {
-    generateCrudForEntity(backendPath, entity);
+    generateCrudForEntity(backendPath, entity, params.integrations);
   }
 
   // 6️⃣ Install dependencies

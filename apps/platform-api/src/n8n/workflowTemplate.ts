@@ -20,30 +20,49 @@ export function buildStartupWorkflowTemplate(params: {
     const flowId = flow.name.replace(/\s+/g, "_").toLowerCase();
 
     // 1. Trigger
-    const triggerNode = {
-      id: `${flowId}_trigger`,
-      name: `${flow.name} Trigger`,
-      type: "n8n-nodes-base.cron",
-      typeVersion: 1,
-      position: [250, index * 250 + 250],
-      parameters: {
-        rule: { interval: [{ field: "minutes", minutesInterval: flow.trigger.everyMinutes }] },
-      },
-    };
+    let triggerNode: any;
+    if (flow.trigger.type === "webhook") {
+      triggerNode = {
+        id: `${flowId}_trigger`,
+        name: `${flow.name} Webhook`,
+        type: "n8n-nodes-base.webhook",
+        typeVersion: 1,
+        position: [250, index * 250 + 250],
+        parameters: {
+          path: flow.trigger.webhookPath || `${flowId}-webhook`,
+          httpMethod: "POST",
+          responseMode: "onReceived",
+        },
+      };
+    } else {
+      triggerNode = {
+        id: `${flowId}_trigger`,
+        name: `${flow.name} Trigger`,
+        type: "n8n-nodes-base.cron",
+        typeVersion: 1,
+        position: [250, index * 250 + 250],
+        parameters: {
+          rule: { interval: [{ field: "minutes", minutesInterval: flow.trigger.everyMinutes || 60 }] },
+        },
+      };
+    }
 
-    // 2. HTTP Source
-    const sourceNode = {
-      id: `${flowId}_source`,
-      name: `Fetch ${flow.name} Data`,
-      type: "n8n-nodes-base.httpRequest",
-      typeVersion: 4,
-      position: [500, index * 250 + 250],
-      parameters: {
-        url: `${startupWebInternalUrl}${flow.source.path}`,
-        method: "GET",
-        responseFormat: "json",
-      },
-    };
+    // 2. HTTP Source (Only for cron)
+    let sourceNode: any = null;
+    if (flow.trigger.type === "cron" && flow.source) {
+      sourceNode = {
+        id: `${flowId}_source`,
+        name: `Fetch ${flow.name} Data`,
+        type: "n8n-nodes-base.httpRequest",
+        typeVersion: 4,
+        position: [500, index * 250 + 250],
+        parameters: {
+          url: `${startupWebInternalUrl}${flow.source.path}`,
+          method: "GET",
+          responseFormat: "json",
+        },
+      };
+    }
 
     // 3. Logic Node
     let logicNode: any;
@@ -107,9 +126,14 @@ return [{
         },
       };
 
-      nodes.push(triggerNode, sourceNode, logicNode, ollamaNode, sinkNode);
-      connections[triggerNode.name] = { main: [[{ node: sourceNode.name, type: "main", index: 0 }]] };
-      connections[sourceNode.name] = { main: [[{ node: logicNode.name, type: "main", index: 0 }]] };
+      nodes.push(triggerNode, logicNode, ollamaNode, sinkNode);
+      if (sourceNode) {
+        nodes.push(sourceNode);
+        connections[triggerNode.name] = { main: [[{ node: sourceNode.name, type: "main", index: 0 }]] };
+        connections[sourceNode.name] = { main: [[{ node: logicNode.name, type: "main", index: 0 }]] };
+      } else {
+        connections[triggerNode.name] = { main: [[{ node: logicNode.name, type: "main", index: 0 }]] };
+      }
       connections[logicNode.name] = { main: [[{ node: ollamaNode.name, type: "main", index: 0 }]] };
       connections[ollamaNode.name] = { main: [[{ node: sinkNode.name, type: "main", index: 0 }]] };
 
@@ -133,25 +157,86 @@ return items.map(item => ({
         },
       };
 
-      sinkNode = {
-        id: `${flowId}_sink`,
-        name: `Mock Email Agent`,
-        type: "n8n-nodes-base.code",
-        typeVersion: 2,
-        position: [1000, index * 250 + 250],
-        parameters: {
-          jsCode: `
+      if (flow.sink.type === "email" && flow.sink.integrations?.email) {
+        sinkNode = {
+          id: `${flowId}_sink`,
+          name: `SendGrid Email`,
+          type: "n8n-nodes-base.httpRequest",
+          typeVersion: 4,
+          position: [1000, index * 250 + 250],
+          parameters: {
+            url: "https://api.sendgrid.com/v3/mail/send",
+            method: "POST",
+            authentication: "none",
+            sendHeaders: true,
+            headerParameters: {
+              parameters: [
+                { name: "Authorization", value: `Bearer ${flow.sink.integrations.email.apiKey}` }
+              ]
+            },
+            sendBody: true,
+            specifyBody: "json",
+            jsonBody: `={
+              "personalizations": [{"to": [{"email": "admin@${sandboxName}.com"}]}],
+              "from": {"email": "${flow.sink.integrations.email.fromEmail}"},
+              "subject": "${flow.name} Notification",
+              "content": [{"type": "text/plain", "value": {{$json.message}} }]
+            }`
+          },
+        };
+      } else if (flow.sink.type === "whatsapp" && flow.sink.integrations?.whatsapp) {
+        sinkNode = {
+          id: `${flowId}_sink`,
+          name: `Twilio WhatsApp`,
+          type: "n8n-nodes-base.httpRequest",
+          typeVersion: 4,
+          position: [1000, index * 250 + 250],
+          parameters: {
+            url: `https://api.twilio.com/2010-04-01/Accounts/${flow.sink.integrations.whatsapp.accountSid}/Messages.json`,
+            method: "POST",
+            sendHeaders: true,
+            headerParameters: {
+              parameters: [
+                { name: "Authorization", value: `Basic ${Buffer.from(`${flow.sink.integrations.whatsapp.accountSid}:${flow.sink.integrations.whatsapp.authToken}`).toString('base64')}` }
+              ]
+            },
+            sendBody: true,
+            specifyBody: "keypair",
+            bodyParameters: {
+              parameters: [
+                { name: "To", value: `whatsapp:+1234567890` }, // Would ideally be dynamic based on Admin settings
+                { name: "From", value: `whatsapp:${flow.sink.integrations.whatsapp.fromNumber}` },
+                { name: "Body", value: `={{$json.message}}` }
+              ]
+            }
+          }
+        };
+      } else {
+        sinkNode = {
+          id: `${flowId}_sink`,
+          name: `Mock Email Agent`,
+          type: "n8n-nodes-base.code",
+          typeVersion: 2,
+          position: [1000, index * 250 + 250],
+          parameters: {
+            jsCode: `
 console.log("📧 SENDING EMAIL...");
 console.log("To: admin@${sandboxName}.com");
 console.log("Subject: ${flow.name} Notification");
 console.log("Content: " + $json.message);
 return [{ json: { status: "sent", to: "admin@${sandboxName}.com", content: $json.message } }];`.trim(),
-        },
-      };
+          },
+        };
+      }
 
-      nodes.push(triggerNode, sourceNode, logicNode, sinkNode);
-      connections[triggerNode.name] = { main: [[{ node: sourceNode.name, type: "main", index: 0 }]] };
-      connections[sourceNode.name] = { main: [[{ node: logicNode.name, type: "main", index: 0 }]] };
+      nodes.push(triggerNode, logicNode, sinkNode);
+      if (sourceNode) {
+        nodes.push(sourceNode);
+        connections[triggerNode.name] = { main: [[{ node: sourceNode.name, type: "main", index: 0 }]] };
+        connections[sourceNode.name] = { main: [[{ node: logicNode.name, type: "main", index: 0 }]] };
+      } else {
+        connections[triggerNode.name] = { main: [[{ node: logicNode.name, type: "main", index: 0 }]] };
+      }
       connections[logicNode.name] = { main: [[{ node: sinkNode.name, type: "main", index: 0 }]] };
     }
   });
