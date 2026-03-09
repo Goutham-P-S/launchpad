@@ -1,6 +1,7 @@
 export type JobStatus =
   | "queued"
   | "planning"
+  | "improving-code"
   | "creating-sandbox"
   | "generating-code"
   | "starting-containers"

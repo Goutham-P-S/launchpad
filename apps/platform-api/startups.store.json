@@ -1,16 +1,16 @@
 [
   {
     "startupId": 1,
-    "slug": "an-ecommerce-website-named-wea",
+    "slug": "e-commerce-for-hand-crafted-go",
     "ports": {
       "webPort": 3001,
       "dbPort": 5433,
       "n8nPort": 5679,
       "backendPort": 4001
     },
-    "sandboxName": "startup-0001-an-ecommerce-website-named-wea",
-    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0001-an-ecommerce-website-named-wea\\infra-v1__planner-v1__ir-v1__builder-v1",
-    "createdAt": "2026-03-03T12:41:47.448Z",
+    "sandboxName": "startup-0001-e-commerce-for-hand-crafted-go",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0001-e-commerce-for-hand-crafted-go\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-03-09T14:49:51.354Z",
     "versions": {
       "infra": "v1",
       "planner": "v1",
@@ -18,20 +18,20 @@
       "builder": "v1"
     },
     "status": "running",
-    "jobId": "13e2f140-ae93-4606-a06f-065777004094"
+    "jobId": "674021c5-dae9-4bcf-ac39-6ea52db948c2"
   },
   {
     "startupId": 2,
-    "slug": "create-an-ecommerce-website-na",
+    "slug": "e-commerce-for-hand-crafted-go",
     "ports": {
       "webPort": 3002,
       "dbPort": 5434,
       "n8nPort": 5680,
       "backendPort": 4002
     },
-    "sandboxName": "startup-0002-create-an-ecommerce-website-na",
-    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0002-create-an-ecommerce-website-na\\infra-v1__planner-v1__ir-v1__builder-v1",
-    "createdAt": "2026-03-03T17:36:04.177Z",
+    "sandboxName": "startup-0002-e-commerce-for-hand-crafted-go",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0002-e-commerce-for-hand-crafted-go\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-03-09T14:59:08.561Z",
     "versions": {
       "infra": "v1",
       "planner": "v1",
@@ -39,7 +39,7 @@
       "builder": "v1"
     },
     "status": "running",
-    "jobId": "75b3ce8a-79e9-4241-a62f-3b21056db934"
+    "jobId": "a9bad835-cebb-4cf5-bfdb-bdebbd93dba5"
   },
   {
     "startupId": 3,
@@ -52,7 +52,7 @@
     },
     "sandboxName": "startup-0003-e-commerce-for-hand-crafted-go",
     "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0003-e-commerce-for-hand-crafted-go\\infra-v1__planner-v1__ir-v1__builder-v1",
-    "createdAt": "2026-03-03T18:03:56.298Z",
+    "createdAt": "2026-03-09T15:05:35.548Z",
     "versions": {
       "infra": "v1",
       "planner": "v1",
@@ -60,48 +60,6 @@
       "builder": "v1"
     },
     "status": "running",
-    "jobId": "76f233ca-7ad3-4b50-9287-f2eefd44869c"
-  },
-  {
-    "startupId": 4,
-    "slug": "create-an-ecommerce-website-na",
-    "ports": {
-      "webPort": 3004,
-      "dbPort": 5436,
-      "n8nPort": 5682,
-      "backendPort": 4004
-    },
-    "sandboxName": "startup-0004-create-an-ecommerce-website-na",
-    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0004-create-an-ecommerce-website-na\\infra-v1__planner-v1__ir-v1__builder-v1",
-    "createdAt": "2026-03-04T00:34:13.678Z",
-    "versions": {
-      "infra": "v1",
-      "planner": "v1",
-      "workflowIR": "v1",
-      "builder": "v1"
-    },
-    "status": "building",
-    "jobId": "e20d808a-fb4d-406e-b8df-138c3b847ed2"
-  },
-  {
-    "startupId": 5,
-    "slug": "create-an-ecommerce-website-na",
-    "ports": {
-      "webPort": 3005,
-      "dbPort": 5437,
-      "n8nPort": 5683,
-      "backendPort": 4005
-    },
-    "sandboxName": "startup-0005-create-an-ecommerce-website-na",
-    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0005-create-an-ecommerce-website-na\\infra-v1__planner-v1__ir-v1__builder-v1",
-    "createdAt": "2026-03-04T00:45:36.560Z",
-    "versions": {
-      "infra": "v1",
-      "planner": "v1",
-      "workflowIR": "v1",
-      "builder": "v1"
-    },
-    "status": "running",
-    "jobId": "305fe0ac-cb54-42a4-ba51-620895f16216"
+    "jobId": "a7ec7628-6943-4aad-b947-6d51c9b7f392"
   }
 ]

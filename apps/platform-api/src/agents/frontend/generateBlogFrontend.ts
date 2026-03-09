@@ -23,6 +23,83 @@ export function generateBlogFrontend(webPath: string, backendPlan: any, frontend
   const lowerName = entityName.toLowerCase();
   const endpoint = `/${lowerName.endsWith('s') ? lowerName : lowerName + 's'}`;
 
+  const layoutVariant = Math.floor(Math.random() * 3) + 1;
+
+  const getHeroSection = () => {
+    if (layoutVariant === 1) {
+      return `
+      {/* Hero Section V1 - Centered Minimal */}
+      <div className="bg-brand-900 text-white py-24 text-center px-4">
+        <div className="max-w-4xl mx-auto animate-fade-in">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 tracking-tight leading-tight">${frontendConfig.heroHeadline}</h1>
+          <p className="text-xl md:text-2xl text-brand-200 max-w-2xl mx-auto font-light leading-relaxed">${frontendConfig.heroSubheadline}</p>
+          <div className="mt-10 flex items-center justify-center gap-3">
+             <div className="w-10 h-10 bg-brand-700 rounded-full flex items-center justify-center font-bold text-lg">${frontendConfig.authorName?.charAt(0) || 'A'}</div>
+             <span className="text-brand-100 font-medium">Written by ${frontendConfig.authorName}</span>
+          </div>
+        </div>
+      </div>
+      `;
+    } else if (layoutVariant === 2) {
+      return `
+      {/* Hero Section V2 - Left Aligned Typography */}
+      <div className="bg-brand-50 border-b border-brand-200 py-32 px-4 relative overflow-hidden">
+         <div className="absolute -right-20 -top-20 w-96 h-96 bg-brand-200 rounded-full blur-3xl opacity-50"></div>
+         <div className="max-w-5xl mx-auto relative z-10 animate-slide-right">
+            <span className="text-brand-600 font-bold tracking-widest uppercase mb-4 block text-sm">The Official Blog</span>
+            <h1 className="text-6xl md:text-8xl font-black mb-8 text-brand-900 tracking-tighter leading-none">
+              ${frontendConfig.heroHeadline}
+            </h1>
+            <p className="text-2xl text-brand-600 max-w-2xl leading-relaxed mb-10 font-medium tracking-tight">
+              ${frontendConfig.heroSubheadline}
+            </p>
+            <div className="flex items-center gap-4 bg-white p-4 rounded-full shadow-sm border border-brand-100 max-w-fit pr-8">
+               <div className="w-14 h-14 bg-brand-200 rounded-full flex items-center justify-center text-brand-700 font-bold text-2xl shadow-inner">
+                  ${frontendConfig.authorName?.charAt(0) || 'A'}
+               </div>
+               <div>
+                  <p className="font-bold text-brand-900 leading-none mb-1">${frontendConfig.authorName}</p>
+                  <p className="text-sm text-brand-500 leading-none">Editor in Chief</p>
+               </div>
+            </div>
+         </div>
+      </div>
+      `;
+    } else {
+      return `
+      {/* Hero Section V3 - Gradient Focus */}
+      <div className="bg-gradient-to-br from-brand-800 to-brand-900 text-white py-24 lg:py-32 px-4 relative">
+         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 relative z-10">
+            <div className="w-full md:w-2/3 animate-slide-up">
+              <div className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-bold mb-8 border border-white/20">
+                 ✨ New Posts Weekly
+              </div>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+                ${frontendConfig.heroHeadline}
+              </h1>
+              <p className="text-xl text-brand-100 mb-8 max-w-xl leading-relaxed font-light">
+                ${frontendConfig.heroSubheadline}
+              </p>
+            </div>
+            <div className="w-full md:w-1/3 flex justify-center md:justify-end animate-fade-in">
+               <div className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl border border-white/20 shadow-2xl text-center w-full max-w-sm">
+                  <div className="w-24 h-24 bg-gradient-to-tr from-brand-400 to-brand-200 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-black text-brand-900 shadow-inner">
+                     ${frontendConfig.authorName?.charAt(0) || 'A'}
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-2">${frontendConfig.authorName}</h3>
+                  <p className="text-brand-200 mb-8 font-medium">Author & Creator</p>
+                  <button className="w-full py-4 bg-white text-brand-900 font-bold rounded-xl hover:bg-brand-50 hover:scale-105 transition-all shadow-lg active:scale-95">
+                     Subscribe
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+      `;
+    }
+  };
+
   writeFile(webPath, "index.html", `
 <!DOCTYPE html>
 <html lang="en">
@@ -332,16 +409,7 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col bg-brand-50 text-brand-900">
       <Navbar />
       
-      {/* Hero Section */}
-      <div className="bg-brand-900 text-white py-24 text-center px-4">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">${frontendConfig.heroHeadline}</h1>
-          <p className="text-xl md:text-2xl text-brand-200 max-w-2xl mx-auto">${frontendConfig.heroSubheadline}</p>
-          <div className="mt-8">
-             <span className="text-brand-300">Written by ${frontendConfig.authorName}</span>
-          </div>
-        </div>
-      </div>
+      ${getHeroSection()}
 
       {/* Main Content */}
       <main className="flex-grow max-w-4xl mx-auto px-4 py-16 w-full">

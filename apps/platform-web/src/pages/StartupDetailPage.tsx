@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchStartup, startContainersApi, stopContainersApi, patchStartupStatus, type StartupRecord } from "../api";
-import { Rocket, ShoppingCart, BarChart, Bot, Target, Globe, Smartphone, Microscope, Lightbulb, Building, Palette, AlertTriangle, LinkIcon, Activity, Database, Settings, FolderOpen, Play, Square } from "lucide-react";
+import { Rocket, ShoppingCart, BarChart, Bot, Target, Globe, Smartphone, Microscope, Lightbulb, Building, Palette, AlertTriangle, LinkIcon, Activity, Database, Settings, FolderOpen, Play, Square, Wrench } from "lucide-react";
 
 function StatusBadge({ status }: { status: StartupRecord["status"] }) {
     const labels: Record<string, string> = {
@@ -118,6 +118,12 @@ export default function StartupDetailPage() {
 
                 {/* Actions */}
                 <div style={{ marginLeft: "auto", display: "flex", gap: 10 }}>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => navigate(`/startups/${startup.sandboxName}/improve`)}
+                    >
+                        <Wrench size={16} /> Improve App
+                    </button>
                     {startup.status !== "running" && (
                         <button
                             className="btn btn-success"

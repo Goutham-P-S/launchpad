@@ -23,6 +23,100 @@ export function generateSaasFrontend(webPath: string, backendPlan: any, frontend
   const lowerName = entityName.toLowerCase();
   const endpoint = `/${lowerName.endsWith('s') ? lowerName : lowerName + 's'}`;
 
+  const layoutVariant = Math.floor(Math.random() * 3) + 1;
+
+  const getHeroSection = (buttonClasses: string, secondaryButtonClasses: string) => {
+    if (layoutVariant === 1) {
+      return `
+      {/* Hero Section V1 - Center aligned with Blobs */}
+      <section className="py-20 lg:py-32 px-4 relative overflow-hidden">
+        {/* Background blobs */}
+        <div className="absolute top-0 -left-40 w-96 h-96 bg-brand-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div className="absolute top-0 -right-40 w-96 h-96 bg-brand-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        
+        <div className="max-w-5xl mx-auto text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-sm font-medium mb-8">
+            <span className="flex h-2 w-2 rounded-full bg-brand-600"></span>
+            New Features Available
+          </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight text-brand-900 leading-tight">
+            ${frontendConfig.heroHeadline}
+          </h1>
+          <p className="text-xl md:text-2xl text-brand-600 max-w-3xl mx-auto mb-12 leading-relaxed">
+            ${frontendConfig.heroSubheadline}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+             <Link to="/register" className="${buttonClasses} flex items-center justify-center gap-2 text-lg">
+                Start Free Trial <ArrowRight className="w-5 h-5" />
+             </Link>
+             <a href="#features" className="${secondaryButtonClasses} flex items-center justify-center text-lg hidden sm:flex">
+                Take the Tour
+             </a>
+          </div>
+          <p className="mt-6 text-sm text-brand-500">No credit card required • 14-day free trial</p>
+        </div>
+      </section>
+      `;
+    } else if (layoutVariant === 2) {
+      return `
+      {/* Hero Section V2 - Left Aligned */}
+      <section className="py-24 lg:py-32 px-4 relative overflow-hidden bg-brand-50/50">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10">
+          <div className="w-full lg:w-1/2">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-brand-700 text-sm font-bold mb-8 shadow-sm border border-brand-100">
+              <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+              v2.0 is now live
+            </div>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 tracking-tighter text-gray-900 leading-[1.1]">
+              ${frontendConfig.heroHeadline}
+            </h1>
+            <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-xl font-medium">
+              ${frontendConfig.heroSubheadline}
+            </p>
+            <div className="flex flex-wrap gap-4">
+               <Link to="/register" className="${buttonClasses} flex items-center gap-2 text-lg shadow-brand-500/30">
+                  Start Free Trial <ArrowRight className="w-5 h-5" />
+               </Link>
+               <a href="#features" className="${secondaryButtonClasses} flex items-center text-lg bg-white">
+                  View Features
+               </a>
+            </div>
+          </div>
+          <div className="w-full lg:w-1/2 relative hidden lg:block">
+             <div className="absolute inset-0 bg-gradient-to-tr from-brand-100 to-white rounded-3xl transform rotate-3 scale-105"></div>
+             <div className="bg-white p-8 rounded-3xl shadow-2xl relative border border-gray-100 aspect-video flex items-center justify-center">
+                <div className="w-full h-full bg-gray-50 rounded-xl border border-dashed border-gray-200 flex items-center justify-center">
+                   <Target className="w-24 h-24 text-brand-200" />
+                </div>
+             </div>
+          </div>
+        </div>
+      </section>
+      `;
+    } else {
+      return `
+      {/* Hero Section V3 - Brand Solid */}
+      <section className="py-24 lg:py-40 px-4 relative overflow-hidden bg-brand-900 text-white">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-10 tracking-tighter leading-none">
+            ${frontendConfig.heroHeadline}
+          </h1>
+          <p className="text-2xl text-brand-100 max-w-3xl mx-auto mb-12 leading-normal font-light">
+            ${frontendConfig.heroSubheadline}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+             <Link to="/register" className="${buttonClasses} !bg-white !text-brand-900 hover:!bg-gray-50 flex items-center justify-center gap-2 text-xl py-4 px-10 shadow-2xl">
+                Get Started Now <ArrowRight className="w-6 h-6" />
+             </Link>
+          </div>
+          <p className="mt-8 text-brand-300 font-medium tracking-wide text-sm uppercase">Join 10,000+ forward-thinking teams</p>
+        </div>
+      </section>
+      `;
+    }
+  };
+
   writeFile(webPath, "index.html", `
 <!DOCTYPE html>
 <html lang="en">
@@ -356,34 +450,8 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col bg-brand-50 text-brand-900 overflow-x-hidden">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="py-20 lg:py-32 px-4 relative overflow-hidden">
-        {/* Background blobs */}
-        <div className="absolute top-0 -left-40 w-96 h-96 bg-brand-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute top-0 -right-40 w-96 h-96 bg-brand-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-sm font-medium mb-8">
-            <span className="flex h-2 w-2 rounded-full bg-brand-600"></span>
-            New Features Available
-          </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight text-brand-900 leading-tight">
-            ${frontendConfig.heroHeadline}
-          </h1>
-          <p className="text-xl md:text-2xl text-brand-600 max-w-3xl mx-auto mb-12 leading-relaxed">
-            ${frontendConfig.heroSubheadline}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-             <Link to="/register" className="${buttonClasses} flex items-center justify-center gap-2 text-lg">
-                Start Free Trial <ArrowRight className="w-5 h-5" />
-             </Link>
-             <a href="#features" className="${secondaryButtonClasses} flex items-center justify-center text-lg hidden sm:flex">
-                Take the Tour
-             </a>
-          </div>
-          <p className="mt-6 text-sm text-brand-500">No credit card required • 14-day free trial</p>
-        </div>
-      </section>
+      ${getHeroSection(buttonClasses, secondaryButtonClasses)}
+
 
       {/* Features Section */}
       <section id="features" className="py-24 bg-white px-4">

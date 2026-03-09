@@ -23,6 +23,92 @@ export function generateEcommerceFrontend(webPath: string, backendPlan: any, fro
   const lowerName = entityName.toLowerCase();
   const endpoint = `/${lowerName.endsWith('s') ? lowerName : lowerName + 's'}`;
 
+  const layoutVariant = Math.floor(Math.random() * 3) + 1;
+
+  const getHeroSection = () => {
+    if (layoutVariant === 1) {
+      return `
+      {/* Hero Section V1 - Left aligned */}
+      <div className="relative overflow-hidden bg-white border-b border-gray-200 z-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10">
+          <div className="md:w-2/3 lg:w-1/2 animate-slide-up">
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-brand-50 text-brand-600 font-bold tracking-wider uppercase text-xs mb-6 border border-brand-100">
+              ${frontendConfig?.heroBadge || '✨ New Arrivals'}
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight mb-6 leading-[1.1]">
+              ${frontendConfig?.heroHeading || 'Discover unique finds curated just for you.'}
+            </h1>
+            <p className="text-lg text-gray-500 mb-8 max-w-xl leading-relaxed">
+              ${frontendConfig?.heroSubheading || 'Hand-picked quality products from top creators. Explore our latest collection and elevate your everyday lifestyle.'}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <button className={\`bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 shadow-brand-500/30 transition-all duration-200 transform hover:-translate-y-0.5 ${frontendConfig?.borderRadius === 'full' ? 'rounded-full' : 'rounded-theme'} ${frontendConfig?.buttonStyle === 'soft' ? 'shadow-lg' : frontendConfig?.buttonStyle === 'outline' ? 'bg-transparent border-2 border-brand-600 text-brand-600 hover:text-white' : 'shadow-sm'}\`}>
+                Shop Now
+              </button>
+              <button className={\`bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-8 border border-gray-200 transition-colors ${frontendConfig?.borderRadius === 'full' ? 'rounded-full' : 'rounded-theme'} ${frontendConfig?.buttonStyle === 'soft' ? 'shadow-md' : 'shadow-sm'}\`}>
+                Explore Collection
+              </button>
+            </div>
+          </div>
+        </div>
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-gradient-to-br from-brand-100 to-teal-50 rounded-full blur-3xl opacity-50 z-[-1] pointer-events-none hidden lg:block"></div>
+        <div className="absolute bottom-0 right-1/4 translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-tr from-blue-100 to-indigo-50 rounded-full blur-3xl opacity-50 z-[-1] pointer-events-none hidden lg:block"></div>
+      </div>
+      `;
+    } else if (layoutVariant === 2) {
+      return `
+      {/* Hero Section V2 - Center aligned */}
+      <div className="relative overflow-hidden bg-gray-50 border-b border-gray-200 z-0 flex items-center justify-center text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 relative z-10 animate-fade-in">
+          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-brand-100 text-brand-700 font-bold tracking-widest uppercase text-xs mb-8 border border-brand-200 shadow-sm">
+            ${frontendConfig?.heroBadge || '✨ Trending Now'}
+          </div>
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 tracking-tighter mb-8 leading-tight">
+            ${frontendConfig?.heroHeading || 'Discover unique finds curated just for you.'}
+          </h1>
+          <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
+            ${frontendConfig?.heroSubheading || 'Hand-picked quality products from top creators. Explore our latest collection and elevate your everyday lifestyle.'}
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <button className={\`bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 px-10 shadow-xl shadow-brand-500/30 transition-all duration-300 transform hover:-translate-y-1 ${frontendConfig?.borderRadius === 'full' ? 'rounded-full' : 'rounded-theme'} text-lg\`}>
+              Shop Now
+            </button>
+            <button className={\`bg-white hover:bg-gray-50 text-gray-800 font-bold py-4 px-10 border-2 border-gray-200 transition-colors ${frontendConfig?.borderRadius === 'full' ? 'rounded-full' : 'rounded-theme'} text-lg shadow-sm\`}>
+              Explore Collection
+            </button>
+          </div>
+        </div>
+      </div>
+      `;
+    } else {
+      return `
+      {/* Hero Section V3 - Split layout */}
+      <div className="relative overflow-hidden bg-white border-b border-gray-200 z-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10 flex flex-col lg:flex-row items-center gap-12">
+          <div className="w-full lg:w-1/2 animate-slide-right">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-[1.1]">
+              ${frontendConfig?.heroHeading || 'Discover unique finds curated just for you.'}
+            </h1>
+            <p className="text-lg text-gray-500 mb-8 max-w-xl leading-relaxed">
+              ${frontendConfig?.heroSubheading || 'Hand-picked quality products from top creators. Explore our latest collection and elevate your everyday lifestyle.'}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <button className={\`bg-brand-900 hover:bg-brand-800 text-white font-bold py-3 px-8 transition-transform transform hover:scale-105 ${frontendConfig?.borderRadius === 'full' ? 'rounded-full' : 'rounded-theme'}\`}>
+                Shop Now
+              </button>
+            </div>
+          </div>
+          <div className="w-full lg:w-1/2 relative animate-fade-in hidden lg:block">
+             <div className="aspect-square bg-brand-50 rounded-full absolute -top-10 -right-10 w-full h-full blur-3xl opacity-50 z-[-1]"></div>
+             <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=60" alt="Hero" className={\`w-full h-[500px] object-cover ${frontendConfig?.borderRadius === 'full' ? 'rounded-[3rem]' : 'rounded-3xl'} shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition-transform duration-500\`} />
+          </div>
+        </div>
+      </div>
+      `;
+    }
+  };
+
   writeFile(webPath, "index.html", `
 <!DOCTYPE html>
 <html lang="en">
@@ -571,34 +657,8 @@ export default function HomePage() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-white border-b border-gray-200 z-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10">
-          <div className="md:w-2/3 lg:w-1/2 animate-slide-up">
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-brand-50 text-brand-600 font-bold tracking-wider uppercase text-xs mb-6 border border-brand-100">
-              ${frontendConfig?.heroBadge || '✨ New Arrivals'}
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight mb-6 leading-[1.1]">
-              ${frontendConfig?.heroHeading || 'Discover unique finds curated just for you.'}
-            </h1>
-            <p className="text-lg text-gray-500 mb-8 max-w-xl leading-relaxed">
-              ${frontendConfig?.heroSubheading || 'Hand-picked quality products from top creators. Explore our latest collection and elevate your everyday lifestyle.'}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <button className={\`bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 shadow-brand-500/30 transition-all duration-200 transform hover:-translate-y-0.5 ${frontendConfig?.borderRadius === 'full' ? 'rounded-full' : 'rounded-theme'} ${frontendConfig?.buttonStyle === 'soft' ? 'shadow-lg' : frontendConfig?.buttonStyle === 'outline' ? 'bg-transparent border-2 border-brand-600 text-brand-600 hover:text-white' : 'shadow-sm'}\`}>
-                Shop Now
-              </button>
-              <button className={\`bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-8 border border-gray-200 transition-colors ${frontendConfig?.borderRadius === 'full' ? 'rounded-full' : 'rounded-theme'} ${frontendConfig?.buttonStyle === 'soft' ? 'shadow-md' : 'shadow-sm'}\`}>
-                Explore Collection
-              </button>
-            </div>
-          </div>
-        </div>
+      ${getHeroSection()}
 
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-gradient-to-br from-brand-100 to-teal-50 rounded-full blur-3xl opacity-50 z-[-1] pointer-events-none hidden lg:block"></div>
-        <div className="absolute bottom-0 right-1/4 translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-tr from-blue-100 to-indigo-50 rounded-full blur-3xl opacity-50 z-[-1] pointer-events-none hidden lg:block"></div>
-      </div>
 
       {/* Trust Badges */}
       <div className="bg-white border-b border-gray-200 py-8 relative z-10">

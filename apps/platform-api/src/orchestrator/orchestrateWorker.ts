@@ -11,7 +11,8 @@ import { setupN8nOwner } from "../n8n/setupN8n";
 import { createN8nApiKey } from "../n8n/createN8nApiKey";
 import { resolveVersions } from "../n8n/versionResolver";
 import { n8nImportWorkflowPublic } from "../n8n/n8nClient";
-import { updateStartup } from "../startupStore";
+import { updateStartup, findStartupBySandboxName } from "../startupStore";
+import { runWebImprovementAgent } from "../agents/webdev/runWebImprovementAgent";
 
 function ensureNotCancelled(jobId: string) {
   const job = getJob(jobId);
@@ -30,6 +31,29 @@ export async function runOrchestration(
   integrations?: any
 ) {
   try {
+    if (prompt.startsWith("[IMPROVE:")) {
+      const match = prompt.match(/\[IMPROVE:(.+?)\]\s*(.*)/);
+      if (!match) throw new Error("Invalid improvement prompt format");
+      const [, sandboxName, requirement] = match;
+
+      const startup = findStartupBySandboxName(sandboxName);
+      if (!startup) throw new Error(`Startup ${sandboxName} not found`);
+
+      setStatus(jobId, "improving-code");
+      streamLog(jobId, `Initializing Web Dev Agent for iterative upgrades on ${sandboxName}...`);
+
+      await runWebImprovementAgent({
+        sandboxPath: startup.sandboxPath,
+        requirement,
+        jobId
+      });
+
+      const result = { webUrl: `http://localhost:${startup.ports.webPort}` };
+      updateJob(jobId, { status: "completed", result });
+      broadcast({ jobId, status: "completed", result });
+      return;
+    }
+
     //
     // 🧠 Planning
     //

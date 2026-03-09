@@ -47,10 +47,22 @@ export async function planSaasFrontend(
 ): Promise<SaasFrontendConfig> {
     console.log("🚀 Frontend SaaS planning...");
 
+    const vibes = [
+        "Ultra-Minimalist & Apple-like Clean",
+        "Bold, High-Contrast & Brutalist",
+        "Dark Mode Cyberpunk Neon",
+        "Soft, Muted Earthy Pastels",
+        "High-End Premium Luxury (Gold/Black/White)",
+        "Playful, Quirky & Fun Pop-Art",
+        "Industrial, Raw & Technical"
+    ];
+    const randomVibe = vibes[Math.floor(Math.random() * vibes.length)];
+
     const system = `
 You are a senior frontend architect and brand designer.
 
 Design the styling and copy for a SaaS platform based on the startup's requirements.
+CRITICAL CONSTRAINT: The mandated aesthetic vibe for this specific generation is "${randomVibe}". You absolutely MUST tailor the brand colors, button styles, container styles, and typography to aggressively match this unique aesthetic. Do not use generic safe colors. Be creative and heavily lean into the requested vibe.
 
 STRICT RULES:
 - Only output JSON.
