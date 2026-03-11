@@ -38,6 +38,7 @@ export interface WebFrontendConfig {
   borderRadius: string;
   buttonStyle: string;
   containerStyle: string;
+  heroImageDescription: string;
 }
 
 export async function planEcommerceFrontend(
@@ -72,6 +73,7 @@ STRICT RULES:
 - \`borderRadius\` must be a valid Tailwind rounded size (e.g. "none", "sm", "md", "lg", "xl", "2xl", "3xl", "full").
 - \`buttonStyle\` must be one of: "solid", "outline", "soft".
 - \`containerStyle\` must be one of: "glass", "solid", "bordered", "flat".
+- \`heroImageDescription\` must be a highly detailed, extremely vivid prompt describing a hyper-realistic commercial photography shot representing the startup. Do not include text in the image.
 
 Return format:
 {
@@ -96,7 +98,8 @@ Return format:
     "700": "#0f766e",
     "800": "#115e59",
     "900": "#134e4a"
-  }
+  },
+  "heroImageDescription": "a hyperrealistic 8k studio product photography shot of a sleek modern laptop sitting on a clean marble desk, dramatic studio lighting"
 }
 `;
 

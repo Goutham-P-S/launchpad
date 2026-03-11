@@ -101,7 +101,7 @@ export function generateEcommerceFrontend(webPath: string, backendPlan: any, fro
           </div>
           <div className="w-full lg:w-1/2 relative animate-fade-in hidden lg:block">
              <div className="aspect-square bg-brand-50 rounded-full absolute -top-10 -right-10 w-full h-full blur-3xl opacity-50 z-[-1]"></div>
-             <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=60" alt="Hero" className={\`w-full h-[500px] object-cover ${frontendConfig?.borderRadius === 'full' ? 'rounded-[3rem]' : 'rounded-3xl'} shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition-transform duration-500\`} />
+             <img src={"[GENERATE_IMAGE: '" + (frontendConfig?.heroImageDescription || 'realistic contemporary aesthetics product photography') + "']"} alt="Hero" className={\`w-full h-[500px] object-cover ${frontendConfig?.borderRadius === 'full' ? 'rounded-[3rem]' : 'rounded-3xl'} shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition-transform duration-500\`} />
           </div>
         </div>
       </div>
@@ -248,9 +248,11 @@ export default function Navbar() {
                 <span className="text-sm font-semibold text-gray-700 hidden sm:block">
                   Hi, {user.email?.split('@')[0]}
                 </span>
-                <Link to="/admin" className="text-sm font-bold text-brand-600 hover:text-brand-700 transition-colors bg-brand-50 px-3 py-1.5 rounded-full hidden sm:block">
-                  Admin Panel
-                </Link>
+                {(user.role === 'ADMIN' || user.roles?.includes('admin') || user.email === 'admin@example.com') && (
+                  <Link to="/admin" className="text-sm font-bold text-brand-600 hover:text-brand-700 transition-colors bg-brand-50 px-3 py-1.5 rounded-full hidden sm:block">
+                    Admin Panel
+                  </Link>
+                )}
                 <button 
                   onClick={() => logout()}
                   className="text-gray-500 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50 focus:outline-none"
@@ -482,7 +484,7 @@ export default function CartPage() {
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="text-lg font-black text-gray-900 line-clamp-1">{item.title}</h3>
-                          <p className="text-brand-600 font-bold mt-1 text-lg">\$\${item.price.toFixed(2)}</p>
+                          <p className="text-brand-600 font-bold mt-1 text-lg">\${item.price.toFixed(2)}</p>
                         </div>
                         <button 
                           onClick={() => removeFromCart(item.id)}
@@ -512,7 +514,7 @@ export default function CartPage() {
                           </button>
                         </div>
                         <p className="font-black text-gray-900 text-lg">
-                          \$\${(item.price * item.quantity).toFixed(2)}
+                          \${(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -550,7 +552,7 @@ export default function CartPage() {
                           </button>
                        </div>
                        <div className="flex justify-between items-center gap-2 mt-2">
-                          <p className="text-brand-600 font-bold text-sm">\$\${item.price.toFixed(2)}</p>
+                          <p className="text-brand-600 font-bold text-sm">\${item.price.toFixed(2)}</p>
                           <div className="flex items-center bg-gray-50 rounded-full border border-gray-200">
                              <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1 px-2 hover:bg-white rounded-l-full border-r border-gray-200 font-bold text-sm"><Minus className="w-3 h-3"/></button>
                              <span className="px-2 text-sm font-bold">{item.quantity}</span>
@@ -569,7 +571,7 @@ export default function CartPage() {
               <div className="space-y-4 mb-6 font-medium">
                 <div className="flex justify-between items-center text-gray-500">
                   <span>Subtotal</span>
-                  <span className="text-gray-900">\$\${cartTotal.toFixed(2)}</span>
+                  <span className="text-gray-900">\${cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center text-gray-500">
                   <span>Shipping estimate</span>
@@ -577,7 +579,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between items-center text-gray-500">
                   <span>Tax estimate</span>
-                  <span className="text-gray-900">\$\${(cartTotal * 0.08).toFixed(2)}</span>
+                  <span className="text-gray-900">\${(cartTotal * 0.08).toFixed(2)}</span>
                 </div>
               </div>
               
@@ -585,7 +587,7 @@ export default function CartPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-black text-gray-900">Order Total</span>
                   <span className="text-3xl font-black text-gray-900 tracking-tight">
-                    \$\${(cartTotal + 5 + cartTotal * 0.08).toFixed(2)}
+                    \${(cartTotal + 5 + cartTotal * 0.08).toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -764,7 +766,7 @@ export default function HomePage() {
                       {desc}
                     </p>
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
-                      <span className="text-2xl font-black text-gray-900 tracking-tight">\$\${price}</span>
+                      <span className="text-2xl font-black text-gray-900 tracking-tight">\${price}</span>
                       <button
                         onClick={() => handleAddToCart(item)}
                         className={\`relative overflow-hidden rounded-full p-3 transition-all duration-300 \${isAdded ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30 scale-105' : 'bg-gray-900 hover:bg-brand-600 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5'}\`}
@@ -1115,7 +1117,7 @@ export default function RegisterPage() {
 `);
 
   writeFile(pagesPath, "AdminPage.tsx", `
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, ArrowLeft, Image as ImageIcon, Plus, Loader2 } from "lucide-react";
 import { api } from "../api/client";
@@ -1125,6 +1127,18 @@ import Navbar from "../components/Navbar";
 export default function AdminPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    } else if (user.role !== 'ADMIN' && !user.roles?.includes('admin') && user.email !== 'admin@example.com') {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  if (!user || (user.role !== 'ADMIN' && !user.roles?.includes('admin') && user.email !== 'admin@example.com')) {
+    return null;
+  }
   
   const [formData, setFormData] = useState({
     name: "",

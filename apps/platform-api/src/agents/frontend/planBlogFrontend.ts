@@ -36,6 +36,7 @@ export interface BlogFrontendConfig {
     borderRadius: string;
     buttonStyle: string;
     containerStyle: string;
+    heroImageDescription: string;
 }
 
 export async function planBlogFrontend(
@@ -70,6 +71,7 @@ STRICT RULES:
 - \`borderRadius\` must be a valid Tailwind rounded size (e.g. "none", "sm", "md", "lg", "xl", "2xl", "3xl", "full").
 - \`buttonStyle\` must be one of: "solid", "outline", "soft".
 - \`containerStyle\` must be one of: "glass", "solid", "bordered", "flat".
+- \`heroImageDescription\` must be a highly detailed, extremely vivid prompt describing a hyper-realistic commercial photography shot representing the startup. Do not include text in the image.
 
 Return format:
 {
@@ -92,7 +94,8 @@ Return format:
     "700": "#334155",
     "800": "#1e293b",
     "900": "#0f172a"
-  }
+  },
+  "heroImageDescription": "a hyperrealistic 8k studio product photography shot of a sleek modern laptop sitting on a clean marble desk, dramatic studio lighting"
 }
 `;
 

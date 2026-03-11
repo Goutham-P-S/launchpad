@@ -61,5 +61,26 @@
     },
     "status": "running",
     "jobId": "a7ec7628-6943-4aad-b947-6d51c9b7f392"
+  },
+  {
+    "startupId": 4,
+    "slug": "e-commerce-for-hand-crafted-go",
+    "ports": {
+      "webPort": 3004,
+      "dbPort": 5436,
+      "n8nPort": 5682,
+      "backendPort": 4004
+    },
+    "sandboxName": "startup-0004-e-commerce-for-hand-crafted-go",
+    "sandboxPath": "C:\\Users\\goutham\\Documents\\Main Project\\final_yr_proj\\sandboxes\\startup-0004-e-commerce-for-hand-crafted-go\\infra-v1__planner-v1__ir-v1__builder-v1",
+    "createdAt": "2026-03-10T00:56:43.591Z",
+    "versions": {
+      "infra": "v1",
+      "planner": "v1",
+      "workflowIR": "v1",
+      "builder": "v1"
+    },
+    "status": "running",
+    "jobId": "9fc6d0e3-a99d-40cc-9107-123dd9584f78"
   }
 ]

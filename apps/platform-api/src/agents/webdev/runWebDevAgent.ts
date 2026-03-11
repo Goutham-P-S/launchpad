@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import axios from "axios";
 
 import { planBackendArchitecture } from "./backendPlanner";
 import { generatePrismaSchema } from "./prismaGenerator";
@@ -134,6 +135,53 @@ export async function runWebDevAgent(params: {
     console.log("🛒 Generating E-Commerce Frontend...");
     const frontendConfig = await planEcommerceFrontend(params.requirement);
     generateEcommerceFrontend(webPath, plan, frontendConfig);
+  }
+
+  //
+  // 8.5️⃣ Intercept and generate frontend images
+  //
+  console.log("🖼️ Scanning frontend for [GENERATE_IMAGE] placeholders...");
+  const srcDir = path.join(webPath, "src");
+  const parseDirImages = async (dir: string) => {
+    const items = fs.readdirSync(dir);
+    for (const item of items) {
+      const fullPath = path.join(dir, item);
+      if (fs.statSync(fullPath).isDirectory()) {
+        await parseDirImages(fullPath);
+      } else if (fullPath.endsWith('.tsx') || fullPath.endsWith('.ts')) {
+        let content = fs.readFileSync(fullPath, 'utf-8');
+        const imageRegex = /\[GENERATE_IMAGE:\s*(?:'|")?(.*?)(?:'|")?\s*\]/g;
+        const matches = Array.from(content.matchAll(imageRegex));
+        if (matches.length > 0) {
+          for (const m of matches) {
+            const fullMatch = m[0];
+            const description = m[1];
+            try {
+              console.log(`   - Generating: "${description}"`);
+              const res = await axios.post("http://localhost:5000/generate", {
+                startup_name: "WebDev",
+                industry: "general",
+                target_audience: "general",
+                brand_style: "modern",
+                image_description: description
+              });
+              if (res.data?.status === "success" && res.data?.image_url) {
+                const compiledUrl = "http://localhost:5000" + res.data.image_url;
+                content = content.replace(fullMatch, compiledUrl);
+                console.log(`   ✓ Successfully generated image`);
+              }
+            } catch (e: any) {
+              console.log(`   ! Failed to contact Image Agent on port 5000: ${e.message}`);
+            }
+          }
+          fs.writeFileSync(fullPath, content);
+        }
+      }
+    }
+  };
+
+  if (fs.existsSync(srcDir)) {
+    await parseDirImages(srcDir);
   }
 
   //

@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import axios from "axios";
 import { llamaChat } from "../llamaClient";
 import { streamLog } from "../../orchestrator/logUtils";
 
@@ -59,10 +60,11 @@ STRICT INSTRUCTIONS:
 3. Return a SINGLE valid JSON dictionary mapping the relative file path to the EXACT full new file content.
 4. Do NOT use markdown outside the JSON block. Do NOT truncate the file content (provide the complete file!).
 5. Do NOT include markdown \`\`\`json wrappers in your final output, just raw JSON.
+6. **IMAGE GENERATION:** If you need to add custom, highly contextual AI-generated images to the layout, use the exact syntax \`[GENERATE_IMAGE: "a detailed description of the image"]\` in place of standard \`src\` URLs. Our backend will automatically intercept these placeholders, generate the image, and replace your text with a valid remote URL before saving. For example: \`<img src="[GENERATE_IMAGE: 'realistic coffee mug on a wooden desk']" />\`.
 
 Example Response:
 {
-  "pages/HomePage.tsx": "import { useState } ... (full entire file content)"
+  "pages/HomePage.tsx": "import { useState ... (full entire file content)"
 }`;
 
     const responseText = await llamaChat({
@@ -84,12 +86,47 @@ Example Response:
 
     streamLog(params.jobId, "💾 Applying unified patches to sandbox filesystem...");
 
-    for (const [relPath, newContent] of Object.entries(modifiedFiles)) {
+    for (const [relPath, contentStr] of Object.entries(modifiedFiles)) {
+        let newContent = contentStr as string;
+
+        // 1. Intercept Image Requests
+        const imageRegex = /\[GENERATE_IMAGE:\s*(?:'|")?(.*?)(?:'|")?\s*\]/g;
+        const matches = Array.from(newContent.matchAll(imageRegex));
+
+        if (matches.length > 0) {
+            streamLog(params.jobId, `🖼️ Found ${matches.length} autonomous image generation requests in ${relPath}. Resolving...`);
+            for (const m of matches) {
+                const fullMatch = m[0];
+                const description = m[1];
+                try {
+                    streamLog(params.jobId, `   - Generating: "${description}"`);
+                    const res = await axios.post("http://localhost:5000/generate", {
+                        startup_name: "WebDev",
+                        industry: "general",
+                        target_audience: "general",
+                        brand_style: "modern",
+                        image_description: description
+                    });
+
+                    if (res.data?.status === "success" && res.data?.image_url) {
+                        const compiledUrl = "http://localhost:5000" + res.data.image_url;
+                        newContent = newContent.replace(fullMatch, compiledUrl);
+                        streamLog(params.jobId, `   ✓ Successfully generated image for ${relPath}`);
+                    } else {
+                        streamLog(params.jobId, `   ! Image generation returned invalid payload for: ${description}`);
+                    }
+                } catch (e: any) {
+                    streamLog(params.jobId, `   ! Failed to contact Image Agent on port 5000: ${e.message}`);
+                }
+            }
+        }
+
+        // 2. Write to Sandbox
         const fullPath = path.join(webSrc, relPath);
         // Safety check: ensure we're not writing outside the sandbox
         if (fullPath.startsWith(webSrc)) {
             fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-            fs.writeFileSync(fullPath, newContent as string);
+            fs.writeFileSync(fullPath, newContent);
             streamLog(params.jobId, `+ Updated ${relPath}`);
         }
     }

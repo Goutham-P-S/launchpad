@@ -40,6 +40,7 @@ export interface SaasFrontendConfig {
     borderRadius: string;
     buttonStyle: string;
     containerStyle: string;
+    heroImageDescription: string;
 }
 
 export async function planSaasFrontend(
@@ -75,6 +76,7 @@ STRICT RULES:
 - \`borderRadius\` must be a valid Tailwind rounded size (e.g. "none", "sm", "md", "lg", "xl", "2xl", "3xl", "full").
 - \`buttonStyle\` must be one of: "solid", "outline", "soft".
 - \`containerStyle\` must be one of: "glass", "solid", "bordered", "flat".
+- \`heroImageDescription\` must be a highly detailed, extremely vivid prompt describing a hyper-realistic commercial photography shot representing the startup. Do not include text in the image.
 
 Return format:
 {
@@ -101,7 +103,8 @@ Return format:
     "700": "#4338ca",
     "800": "#3730a3",
     "900": "#312e81"
-  }
+  },
+  "heroImageDescription": "a hyperrealistic 8k studio product photography shot of a sleek modern laptop sitting on a clean marble desk, dramatic studio lighting displaying data charts"
 }
 `;
 
