@@ -560,7 +560,23 @@ export default function LoginPage() {
 }
 `);
 
-  // AdminPage
+    // AdminPage
+  const formFields = (primaryEntity.fields || []).filter((f: any) => !f.isId);
+  const stateDecls = formFields.map((f: any) => `  const [${f.name}, set${f.name.charAt(0).toUpperCase() + f.name.slice(1)}] = useState("");`).join("\n");
+  const payloadObj = formFields.map((f: any) => `${f.name}`).join(", ");
+  const inputRender = formFields.map((f: any) => {
+    if (f.name.toLowerCase() === 'content' || f.name.toLowerCase() === 'description') {
+       return `                  <div className="mb-4">
+                      <label className="block text-sm font-medium mb-1 capitalize">${f.name}</label>
+                      <textarea value={${f.name}} onChange={e=>set${f.name.charAt(0).toUpperCase() + f.name.slice(1)}(e.target.value)} rows={6} className="w-full border p-2 ${roundedClass}" required />
+                  </div>`;
+    }
+    return `                  <div className="mb-4">
+                      <label className="block text-sm font-medium mb-1 capitalize">${f.name}</label>
+                      <input value={${f.name}} onChange={e=>set${f.name.charAt(0).toUpperCase() + f.name.slice(1)}(e.target.value)} className="w-full border p-2 ${roundedClass}" required />
+                  </div>`;
+  }).join("\n");
+
   writeFile(pagesPath, "AdminPage.tsx", `
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
@@ -572,8 +588,7 @@ export default function AdminPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState<any[]>([]);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+${stateDecls}
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
@@ -588,13 +603,11 @@ export default function AdminPage() {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const fieldName1 = "${primaryEntity.fields[1]?.name || 'title'}";
-      const fieldName2 = "${primaryEntity.fields[2]?.name || 'content'}";
-      await api.post("${endpoint}", { [fieldName1]: title, [fieldName2]: content }, { headers: { Authorization: \`Bearer \${token}\` }});
+      await api.post("${endpoint}", { ${payloadObj} }, { headers: { Authorization: \`Bearer \${token}\` }});
       window.location.reload();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to publish post.");
+      alert("Failed to publish content.");
     }
   };
 
@@ -607,31 +620,25 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen flex flex-col bg-brand-50">
       <Navbar />
-      <div className="max-w-5xl mx-auto w-full p-6 py-12">
-        <h1 className="text-3xl font-bold mb-8 text-brand-900 border-b pb-4">Author Dashboard</h1>
+      <div className="max-w-7xl mx-auto w-full p-6 py-12">
+        <h1 className="text-3xl font-bold mb-8 text-brand-900 border-b pb-4">Dashboard</h1>
         
         <div className="grid md:grid-cols-3 gap-8">
             <div className="md:col-span-1">
                 <form onSubmit={handleCreate} className="${containerClasses} p-6 sticky top-24">
-                  <h2 className="text-xl font-bold mb-4">New Post</h2>
-                  <div className="mb-4">
-                      <label className="block text-sm font-medium mb-1">Title</label>
-                      <input value={title} onChange={e=>setTitle(e.target.value)} className="w-full border p-2 ${roundedClass}" required />
-                  </div>
-                  <div className="mb-4">
-                      <label className="block text-sm font-medium mb-1">Content</label>
-                      <textarea value={content} onChange={e=>setContent(e.target.value)} rows={6} className="w-full border p-2 ${roundedClass}" required />
-                  </div>
-                  <button type="submit" className="${buttonClasses} w-full">Publish Post</button>
+                  <h2 className="text-xl font-bold mb-4">Create New</h2>
+${inputRender}
+                  <button type="submit" className="${buttonClasses} w-full mt-4">Publish</button>
                 </form>
             </div>
             
             <div className="md:col-span-2 space-y-4">
-                <h2 className="text-xl font-bold mb-4">Manage Posts</h2>
+                <h2 className="text-xl font-bold mb-4">Manage Items</h2>
+                {items.length === 0 ? <p className="text-gray-500">No items created yet.</p> : null}
                 {items.map(item => (
                     <div key={item.id} className="${containerClasses} p-4 flex justify-between items-center">
                         <div>
-                           <h3 className="font-bold">{item.title || item.name || "Untitled"}</h3>
+                           <h3 className="font-bold">{item.title || item.name || "Item #" + item.id}</h3>
                            <p className="text-sm text-brand-500">ID: {item.id}</p>
                         </div>
                         <button onClick={() => handleDelete(item.id)} className="text-red-500 hover:text-red-700 font-medium px-3 py-1 border border-red-200 rounded hover:bg-red-50">Delete</button>
